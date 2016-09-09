@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Bawx;
+using MGWheels.MiniUtils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -29,7 +30,7 @@ namespace VoxViewerDx
         {
             _graphics = new GraphicsDeviceManager(this);
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            _graphics.IsFullScreen = true;
+            //_graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
 
             IsFixedTimeStep = false;

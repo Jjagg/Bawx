@@ -65,6 +65,10 @@
     <Compile Include="VoxViewer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MGWheels.MiniUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MGWheels\MGWheels.MiniUtils\bin\Release\MGWheels.MiniUtils.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>

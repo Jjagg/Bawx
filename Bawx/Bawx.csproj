@@ -40,16 +40,10 @@
     <Compile Include="BytePosition3.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="FrameRateCounter.cs" />
     <Compile Include="GraphicsStateStack.cs" />
     <Compile Include="IBounded.cs" />
     <Compile Include="BoundingOctree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="VoxelBuffer.cs" />
     <Compile Include="BlockData.cs" />
     <Compile Include="VertexPositionNormal.cs" />
@@ -65,14 +59,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Shaders\voxelShader.dx11.mgfxo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\fpsFont.xnb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
