@@ -1,0 +1,21 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+/reference:..\..\MagicaVoxLoader\bin\Debug\MagicaVoxLoader.dll
+
+#---------------------------------- Content ---------------------------------#
+
+#begin monu1.vox
+/importer:VoxImporter
+/processor:VoxelChunkProcessor
+/build:monu1.vox
+
