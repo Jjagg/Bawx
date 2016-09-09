@@ -24,9 +24,7 @@ namespace MagicaVoxLoader
                     input.Palette[voxels[i].ColorIndex - 1]));
             }
 
-            // ReSharper disable once PossibleLossOfFraction
-            var pos = new Vector3(-input.SizeX / 2, -input.SizeY / 2, -input.SizeZ / 2);
-            return new ChunkContent(pos, input.SizeX, input.SizeY, input.SizeZ, data.ToArray());
+            return new ChunkContent(Vector3.Zero, input.SizeX, input.SizeY, input.SizeZ, data.ToArray());
         }
     }
 }

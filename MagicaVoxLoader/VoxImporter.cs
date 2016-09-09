@@ -119,6 +119,7 @@ namespace MagicaVoxLoader
                         ReadPalette(result, reader);
                         break;
                     default:
+                        _context.Logger.LogMessage($"Skipping deprecated chunk {chunkId}");
                         reader.BaseStream.Seek(chunkSize + childrenSize, SeekOrigin.Current);
                         break;
                 }
@@ -137,8 +138,10 @@ namespace MagicaVoxLoader
         {
             _context.Logger.LogMessage($"Reading SIZE chunk...");
             voxContent.SizeX = reader.ReadInt32();
-            voxContent.SizeY = reader.ReadInt32();
+            // Z-axis points up for MV but backwards (towards us) for MG. 
+            // So MG axes are rotated a quarter over the positive x-axis relative to MV
             voxContent.SizeZ = reader.ReadInt32();
+            voxContent.SizeY = reader.ReadInt32();
         }
 
         private void ReadVoxel(VoxContent voxContent, BinaryReader reader)
@@ -153,7 +156,7 @@ namespace MagicaVoxLoader
                 voxels[i].X = reader.ReadByte();
                 // Z-axis points up for MV but backwards (towards us) for MG. 
                 // So MG axes are rotated a quarter over the positive x-axis relative to MV
-                voxels[i].Z = (byte) -reader.ReadByte();
+                voxels[i].Z = (byte) (voxContent.SizeZ-reader.ReadByte());
                 voxels[i].Y = reader.ReadByte();
                 voxels[i].ColorIndex = reader.ReadByte();
             }

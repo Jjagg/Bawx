@@ -73,6 +73,11 @@ namespace Bawx
             public DepthStencilState DepthStencilState { get; }
 
             /// <summary>
+            /// Gets the rasterizer state.
+            /// </summary>
+            public RasterizerState RasterizerState { get; }
+
+            /// <summary>
             /// Gets the number of sampler states stored.
             /// </summary>
             public int SamplerStateCount => SamplerStates.Length;
@@ -92,6 +97,7 @@ namespace Bawx
 
                 BlendState = graphicsDevice.BlendState;
                 DepthStencilState = graphicsDevice.DepthStencilState;
+                RasterizerState = graphicsDevice.RasterizerState;
 
                 SamplerStates = new SamplerState[samplerStateCount];
                 for (var i = 0; i < samplerStateCount; i++)
@@ -108,6 +114,7 @@ namespace Bawx
 
                 graphicsDevice.BlendState = BlendState;
                 graphicsDevice.DepthStencilState = DepthStencilState;
+                graphicsDevice.RasterizerState = RasterizerState;
 
                 for (var i = 0; i < SamplerStateCount; i++)
                 graphicsDevice.SamplerStates[i] = SamplerStates[i];

@@ -10,16 +10,24 @@ namespace Bawx
 
         #region DX or OpenGL
 
-        private static bool IsUsingDx() {
+        private static int GetShaderProfile() {
             // use reflection to figure out if Shader.Profile is OpenGL (0) or DirectX (1)
             var mgAssembly = Assembly.GetAssembly(typeof(Game));
             var shaderType = mgAssembly.GetType("Microsoft.Xna.Framework.Graphics.Shader");
             var profileProperty = shaderType.GetProperty("Profile");
-            var value = (int) profileProperty.GetValue(null);
-            return value == 1;
+            return (int) profileProperty.GetValue(null);
         }
 
-        public static readonly string ShaderExtension = IsUsingDx() ? ".dx11.mgfxo" : ".ogl.mgfxo";
+        public static readonly int ShaderProfile;
+
+        static VoxelEffect()
+        {
+            ShaderProfile = GetShaderProfile();
+            ShaderExtension = IsUsingDx ? ".dx11" : ".ogl";
+        }
+
+        private static bool IsUsingDx => ShaderProfile == 1;
+        private static readonly string ShaderExtension;
 
         private static byte[] LoadShaderBytes(string name) {
             var stream = typeof(VoxelEffect).Assembly.GetManifestResourceStream(name);
@@ -31,6 +39,8 @@ namespace Bawx
 
         #endregion
 
+        #region Params
+
         private readonly EffectParameter _worldParam;
         private readonly EffectParameter _viewParam;
         private readonly EffectParameter _projectionParam;
@@ -39,17 +49,18 @@ namespace Bawx
         private readonly EffectParameter _diffuseLightParam;
         private readonly EffectParameter _ambientLightParam;
 
+        #endregion
+
         // TODO caching
         public Vector3 World;
         public Matrix View;
         public Matrix Projection;
 
-        public Vector3 LightDirection = Vector3.Normalize(new Vector3(-1,-1,-1));
+        public Vector3 LightDirection = Vector3.Normalize(new Vector3(-1f,-1f,-0.6f));
         public Vector3 DiffuseLight = new Vector3(0.75f);
         public Color AmbientLight = new Color(0.35f, 0.35f, 0.35f);
 
-        // TODO choose dx/ogl effect at runtime
-        public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes("Bawx.Shaders.voxelShader.dx11.mgfxo"))
+        public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes($"Bawx.Shaders.voxelShader{ShaderExtension}.mgfxo"))
         {
             _worldParam = Parameters["World"];
             _viewParam = Parameters["View"];

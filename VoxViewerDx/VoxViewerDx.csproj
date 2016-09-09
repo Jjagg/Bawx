@@ -65,6 +65,9 @@
     <Compile Include="VoxViewer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="InputHelper">
+      <HintPath>..\..\MGWheels\MGWheels.InputHelper\bin\Release\InputHelper.dll</HintPath>
+    </Reference>
     <Reference Include="MGWheels.MiniUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\MGWheels\MGWheels.MiniUtils\bin\Release\MGWheels.MiniUtils.dll</HintPath>
