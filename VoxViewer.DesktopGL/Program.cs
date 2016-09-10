@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoxViewer
+namespace VoxViewer.DesktopGL
 {
     /// <summary>
     /// The main class.

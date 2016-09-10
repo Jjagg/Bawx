@@ -13,7 +13,7 @@ namespace VoxViewerDx
         [STAThread]
         static void Main()
         {
-            using (var game = new VoxViewer())
+            using (var game = new VoxViewer.VoxViewer())
                 game.Run();
         }
     }

@@ -9,11 +9,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.Windows"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicaVoxLoader", "MagicaVoxLoader\MagicaVoxLoader.csproj", "{2175E1E6-E4B6-41EA-A16B-6754D0735A96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxViewer", "VoxViewer\VoxViewer.csproj", "{B285D302-467C-41A7-9141-D3ADF7A75626}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxViewerDx", "VoxViewerDx\VoxViewerDx.csproj", "{85BE2207-6231-4E8E-94BF-4C9B5E869030}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VoxViewer", "VoxViewer\VoxViewer.shproj", "{EB4F5E4B-C814-432D-84FC-756E65FA0205}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxViewer.DesktopGL", "VoxViewer.DesktopGL\VoxViewer.DesktopGL.csproj", "{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.WindowsGL", "..\..\..\..\Source\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj", "{6D75E618-19CA-4C51-9546-F10965FBC0B8}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		VoxViewer\VoxViewer.projitems*{3b15ea5f-242f-4bee-b6b1-c00780c61a9f}*SharedItemsImports = 4
+		VoxViewer\VoxViewer.projitems*{85be2207-6231-4e8e-94bf-4c9b5e869030}*SharedItemsImports = 4
+		VoxViewer\VoxViewer.projitems*{eb4f5e4b-c814-432d-84fc-756e65fa0205}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
@@ -45,14 +54,6 @@ Global
 		{2175E1E6-E4B6-41EA-A16B-6754D0735A96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2175E1E6-E4B6-41EA-A16B-6754D0735A96}.Release|x86.ActiveCfg = Release|Any CPU
 		{2175E1E6-E4B6-41EA-A16B-6754D0735A96}.Release|x86.Build.0 = Release|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Debug|x86.Build.0 = Debug|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Release|x86.ActiveCfg = Release|Any CPU
-		{B285D302-467C-41A7-9141-D3ADF7A75626}.Release|x86.Build.0 = Release|Any CPU
 		{85BE2207-6231-4E8E-94BF-4C9B5E869030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85BE2207-6231-4E8E-94BF-4C9B5E869030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85BE2207-6231-4E8E-94BF-4C9B5E869030}.Debug|x86.ActiveCfg = Debug|x86
@@ -61,6 +62,22 @@ Global
 		{85BE2207-6231-4E8E-94BF-4C9B5E869030}.Release|Any CPU.Build.0 = Release|Any CPU
 		{85BE2207-6231-4E8E-94BF-4C9B5E869030}.Release|x86.ActiveCfg = Release|x86
 		{85BE2207-6231-4E8E-94BF-4C9B5E869030}.Release|x86.Build.0 = Release|x86
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Debug|x86.Build.0 = Debug|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Release|x86.ActiveCfg = Release|Any CPU
+		{3B15EA5F-242F-4BEE-B6B1-C00780C61A9F}.Release|x86.Build.0 = Release|Any CPU
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Debug|x86.ActiveCfg = Debug|x86
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Debug|x86.Build.0 = Debug|x86
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|x86.ActiveCfg = Release|x86
+		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,7 @@
-﻿using Bawx;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace VoxViewerDx
+namespace Bawx
 {
     public class VoxelChunkReader : ContentTypeReader<Chunk>
     {

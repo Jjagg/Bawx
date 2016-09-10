@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VoxViewer")]
-[assembly: AssemblyProduct("VoxViewer")]
+[assembly: AssemblyTitle("VoxViewer.DesktopGL")]
+[assembly: AssemblyProduct("VoxViewer.DesktopGL")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e3a087d6-0c97-429f-b36a-23263491101d")]
+[assembly: Guid("f773ba07-ee04-436a-b153-bf0531a57234")]
 
 // Version information for an assembly consists of the following four values:
 //

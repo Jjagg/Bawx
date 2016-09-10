@@ -48,6 +48,7 @@
     <Compile Include="BlockData.cs" />
     <Compile Include="VertexPositionNormal.cs" />
     <Compile Include="VertexPositionNormalColor.cs" />
+    <Compile Include="VoxelChunkReader.cs" />
     <Compile Include="VoxelData.cs" />
     <Compile Include="VoxelEffect.cs" />
     <Compile Include="VoxelScene.cs" />
@@ -60,6 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Shaders\voxelShader.dx11.mgfxo" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Shaders\voxelShader.ogl.mgfxo" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

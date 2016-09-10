@@ -86,7 +86,7 @@ namespace MagicaVoxLoader
             }
 
             var version = reader.ReadInt32();
-            _context.Logger.LogMessage($"Reading Voxel file. Magica Voxel version {version}.");
+            _context.Logger.LogMessage($"Reading .vox file created with Magica Voxel version: {version}.");
 
             var mainId = new string(reader.ReadChars(4));
             var mainSize = reader.ReadInt32();
@@ -136,7 +136,7 @@ namespace MagicaVoxLoader
 
         private void ReadSize(VoxContent voxContent, BinaryReader reader)
         {
-            _context.Logger.LogMessage($"Reading SIZE chunk...");
+            _context.Logger.LogMessage("Reading SIZE chunk...");
             voxContent.SizeX = reader.ReadInt32();
             // Z-axis points up for MV but backwards (towards us) for MG. 
             // So MG axes are rotated a quarter over the positive x-axis relative to MV
@@ -146,7 +146,7 @@ namespace MagicaVoxLoader
 
         private void ReadVoxel(VoxContent voxContent, BinaryReader reader)
         {
-            _context.Logger.LogMessage($"Reading VOXEL chunk...");
+            _context.Logger.LogMessage("Reading VOXEL chunk...");
             voxContent.VoxelCount = reader.ReadInt32();
 
             var voxels = new MagicaVoxel[voxContent.VoxelCount];
@@ -166,7 +166,7 @@ namespace MagicaVoxLoader
 
         private void ReadPalette(VoxContent voxContent, BinaryReader reader)
         {
-            _context.Logger.LogMessage($"Reading PALETTE chunk...");
+            _context.Logger.LogMessage("Reading PALETTE chunk...");
 
             // - last color is not used ( only the first 255 colors are used ). 
             // - the first color ( at position 0 ) is corresponding to color index 1.
