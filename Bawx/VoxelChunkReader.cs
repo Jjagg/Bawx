@@ -12,23 +12,29 @@ namespace Bawx
             var gds = (IGraphicsDeviceService) reader.ContentManager.ServiceProvider.GetService(typeof(IGraphicsDeviceService));
             var gd = gds.GraphicsDevice;
 
-            var x = reader.ReadInt32();
-            var y = reader.ReadInt32();
-            var z = reader.ReadInt32();
+            var sizeX = reader.ReadInt32();
+            var sizeY = reader.ReadInt32();
+            var sizeZ = reader.ReadInt32();
             var pos = reader.ReadVector3();
 
             var count = reader.ReadInt32();
             var blockData = new BlockData[count];
 
             for (var i = 0; i < count; i++)
-                blockData[i] = new BlockData(reader.ReadUInt32());
+            {
+                var x = reader.ReadByte();
+                var y = reader.ReadByte();
+                var z = reader.ReadByte();
+                var index = reader.ReadByte();
+                blockData[i] = new BlockData(x, y, z, index);
+            }
 
             var palette = new Vector4[255];
             for (var i = 0; i < 255; i++)
                 palette[i] = reader.ReadColor().ToVector4();
 
             var renderer = new InstancedChunkRenderer(gd, palette);
-            var chunk = new Chunk(renderer, pos, x, y, z);
+            var chunk = new Chunk(renderer, pos, sizeX, sizeY, sizeZ);
 
             chunk.BuildChunk(blockData);
             return chunk;

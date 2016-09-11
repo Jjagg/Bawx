@@ -49,7 +49,7 @@ struct InstanceData
 struct BlockData
 {
     // first three components are position, fourth is palette index
-    float4 OffsetIndex : POSITION1;
+    uint4 OffsetIndex : POSITION1;
 };
 
 

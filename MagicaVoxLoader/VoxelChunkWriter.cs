@@ -23,7 +23,10 @@ namespace MagicaVoxLoader
             for (var i = 0; i < count; i++)
             {
                 var b = value.Blocks[i];
-                output.Write(b.PackedValue);
+                output.Write(b.X);
+                output.Write(b.Y);
+                output.Write(b.Z);
+                output.Write(b.Index);
             }
 
             // write the palette
