@@ -63,7 +63,7 @@ namespace VoxViewer
             _font = Content.Load<SpriteFont>("font");
 
             // nice gradient background
-            const int resolution = 64;
+            const int resolution = 16;
             _background = new Texture2D(_graphics.GraphicsDevice, 1, resolution);
             var gradient = new Color[resolution];
             for (var i = 0; i < resolution; i++)
@@ -315,8 +315,8 @@ namespace VoxViewer
                 {
                     var voxel = voxels[i];
                     effect.DiffuseColor = voxel.Color.ToVector3();
-                    effect.World = Matrix.CreateTranslation(voxel.X, voxel.Y, voxel.Z);
-                    effect.World = effect.World * Matrix.CreateRotationX(MathHelper.ToRadians(90)) * Matrix.CreateRotationZ(MathHelper.ToRadians(180));
+                    effect.ChunkPosition = Matrix.CreateTranslation(voxel.X, voxel.Y, voxel.Z);
+                    effect.ChunkPosition = effect.ChunkPosition * Matrix.CreateRotationX(MathHelper.ToRadians(90)) * Matrix.CreateRotationZ(MathHelper.ToRadians(180));
 
                     foreach (var pass in effect.CurrentTechnique.Passes)
                     {

@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Bawx
 {
@@ -48,7 +49,9 @@ namespace Bawx
 
         #region Params
 
-        private readonly EffectParameter _worldParam;
+        private readonly EffectParameter _paletteParam;
+
+        private readonly EffectParameter _positionParam;
         private readonly EffectParameter _viewParam;
         private readonly EffectParameter _projectionParam;
 
@@ -58,21 +61,131 @@ namespace Bawx
 
         #endregion
 
-        // TODO caching
-        public Vector3 World;
-        public Matrix View;
-        public Matrix Projection;
 
-        public Vector3 LightDirection = Vector3.Normalize(new Vector3(-1f,-1f,-0.6f));
-        public Vector3 DiffuseLight = new Vector3(0.75f);
-        public Color AmbientLight = new Color(0.35f, 0.35f, 0.35f);
+        #region Palette
+
+        private bool _paletteDirty;
+
+        private Vector4[] _palette;
+        public Vector4[] Palette
+        {
+            get { return _palette; }
+            set
+            {
+                if (value != _palette)
+                {
+                    _palette = value;
+                    _paletteDirty = true;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Camera
+
+        private bool _cameraDirty;
+
+        private Vector3 _chunkPosition;
+        public Vector3 ChunkPosition
+        {
+            get { return _chunkPosition; }
+            set
+            {
+
+                if (_chunkPosition != value)
+                {
+                    _chunkPosition = value;
+                    _cameraDirty = true;
+                }
+            }
+        }
+
+        private Matrix _view;
+        public Matrix View
+        {
+            get { return _view; }
+            set
+            {
+                if (_view != value)
+                {
+                    _view = value;
+                    _cameraDirty = true;
+                }
+            }
+        }
+
+        private Matrix _projection;
+        public Matrix Projection
+        {
+            get { return _projection; }
+            set
+            {
+                if (_projection != value)
+                {
+                    _projection = value;
+                    _cameraDirty = true;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Light
+        private bool _lightDirty;
+
+        private Vector3 _lightDirection = Vector3.Normalize(new Vector3(-1f, -1f, -0.6f));
+        public Vector3 LightDirection
+        {
+            get { return _lightDirection; }
+            set
+            {
+                if (_lightDirection != value)
+                {
+                    _lightDirection = value;
+                    _lightDirty = true;
+                }
+            }
+        }
+
+        private Vector3 _diffuseLight = new Vector3(0.75f);
+        public Vector3 DiffuseLight
+        {
+            get { return _diffuseLight; }
+            set
+            {
+                if (_diffuseLight != value)
+                {
+                    _diffuseLight = value;
+                    _lightDirty = true;
+                }
+            }
+        }
+
+        private Color _ambientLight = new Color(0.35f, 0.35f, 0.35f);
+        public Color AmbientLight
+        {
+            get { return _ambientLight; }
+            set
+            {
+                if (_ambientLight != value)
+                {
+                    _ambientLight = value;
+                    _lightDirty = true;
+                }
+            }
+        }
+
+        #endregion
 
         public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes($"Bawx.Shaders.voxelShader{ShaderExtension}.mgfxo"))
         {
             BatchTechnique = Techniques["Batch"];
             InstancingTechnique = Techniques["Instancing"];
 
-            _worldParam = Parameters["World"];
+            _paletteParam = Parameters["Palette"];
+
+            _positionParam = Parameters["ChunkPosition"];
             _viewParam = Parameters["View"];
             _projectionParam = Parameters["Projection"];
 
@@ -83,13 +196,22 @@ namespace Bawx
 
         protected override void OnApply()
         {
-            _worldParam?.SetValue(World);
-            _viewParam?.SetValue(View);
-            _projectionParam?.SetValue(Projection);
+            if (_paletteDirty) 
+                _paletteParam.SetValue(Palette);
 
-            _lightDirParam?.SetValue(LightDirection);
-            _diffuseLightParam?.SetValue(DiffuseLight);
-            _ambientLightParam?.SetValue(AmbientLight.ToVector3());
+            if (_cameraDirty)
+            {
+                _positionParam?.SetValue(ChunkPosition);
+                _viewParam?.SetValue(View);
+                _projectionParam?.SetValue(Projection);
+            }
+
+            if (_lightDirty)
+            {
+                _lightDirParam?.SetValue(LightDirection);
+                _diffuseLightParam?.SetValue(DiffuseLight);
+                _ambientLightParam?.SetValue(AmbientLight.ToVector3());
+            }
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Bawx
         {
             var elements = new [] 
             { 
-                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 1), 
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0), 
                 new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0), 
             };
             VertexDeclaration = new VertexDeclaration(elements);

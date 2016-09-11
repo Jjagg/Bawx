@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx.Rendering
@@ -35,10 +36,18 @@ namespace Bawx.Rendering
 
         #region Initialization
 
-        protected ChunkRenderer(GraphicsDevice graphicsDevice)
+        protected ChunkRenderer(GraphicsDevice graphicsDevice, Vector4[] palette)
         {
+            if (graphicsDevice == null)
+                throw new ArgumentNullException(nameof(graphicsDevice));
+            if (graphicsDevice.GraphicsProfile != GraphicsProfile.HiDef)
+                throw new ArgumentException("GraphicsDevice should have the HiDef profile!");
+            if (palette == null)
+                throw new ArgumentNullException(nameof(palette));
+                
             GraphicsDevice = graphicsDevice;
             Effect = new VoxelEffect(graphicsDevice);
+            Effect.Palette = palette;
         }
 
         /// <summary>

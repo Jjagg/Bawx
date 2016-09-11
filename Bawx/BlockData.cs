@@ -7,27 +7,58 @@ namespace Bawx
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BlockData : IVertexType
     {
-        // TODO try to use bytes to save lots of data transfer! Maybe need to pack the bytes though
-        public Vector3 Position;
-        public Color Color;
+        public byte X;
+        public byte Y;
+        public byte Z;
+        public byte Index;
+
         public static readonly VertexDeclaration VertexDeclaration;
 
-        public BlockData(Vector3 position, Color color)
+        public BlockData(byte x, byte y, byte z, byte index)
         {
-            Position = position;
-            Color = color;
+            X = x;
+            Y = y;
+            Z = z;
+            Index = index;
         }
+
+        public BlockData(byte[] bytes)
+        {
+            X = bytes[0];
+            Y = bytes[1];
+            Z = bytes[2];
+            Index = bytes[3];
+        }
+
+        public BlockData(uint packedValue) : this(
+                (byte) (packedValue & 0xFF),
+                (byte) ((packedValue >> 8) & 0xFF),
+                (byte) ((packedValue >> 16) & 0xFF),
+                (byte) ((packedValue >> 24) & 0xFF)) {
+        }
+
+        public Vector3 Position
+        {
+            get { return new Vector3(X, Y, Z); }
+            set
+            {
+                X = (byte) value.X;
+                Y = (byte) value.Y;
+                Z = (byte) value.Z;
+            }
+        }
+
 
         VertexDeclaration IVertexType.VertexDeclaration => VertexDeclaration;
 
         public override string ToString()
         {
-            return "{{Position:" + Position + " Color:" + Color + "}}";
+            return $"Position: ({X}, {Y}, {Z}), Index: {Index}";
         }
 
         public bool Equals(BlockData other)
         {
-            return Position.Equals(other.Position) && Color.Equals(other.Color);
+            return X == other.X && Y == other.Y && Z == other.Z && Index == other.Index;
         }
 
         public override bool Equals(object obj)
@@ -40,28 +71,29 @@ namespace Bawx
         {
             unchecked
             {
-                var hashCode = Position.GetHashCode();
-                hashCode = (hashCode*397) ^ Color.GetHashCode();
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode*397) ^ Y.GetHashCode();
+                hashCode = (hashCode*397) ^ Z.GetHashCode();
+                hashCode = (hashCode*397) ^ Index.GetHashCode();
                 return hashCode;
             }
         }
 
-        public static bool operator ==(BlockData left, BlockData right)
+        public static bool operator ==(BlockData a, BlockData b)
         {
-            return left.Equals(right);
+            return a.Equals(b);
         }
 
-        public static bool operator !=(BlockData left, BlockData right)
+        public static bool operator !=(BlockData a, BlockData b)
         {
-            return !(left == right);
+            return !(a == b);
         }
 
         static BlockData()
         {
             var elements = new [] 
             { 
-                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0), 
-                new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0), 
+                new VertexElement(0, VertexElementFormat.Byte4, VertexElementUsage.Position, 1) 
             };
             VertexDeclaration = new VertexDeclaration(elements);
         }

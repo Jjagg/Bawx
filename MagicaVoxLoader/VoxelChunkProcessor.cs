@@ -19,12 +19,11 @@ namespace MagicaVoxLoader
                 if (voxels[i].IsEmpty)
                     continue;
 
-                data.Add(new BlockData(
-                    new Vector3(voxels[i].X, voxels[i].Y, voxels[i].Z),
-                    input.Palette[voxels[i].ColorIndex - 1]));
+                // We reduce color index by one so the index matches with our palette array
+                data.Add(new BlockData(voxels[i].X, voxels[i].Y, voxels[i].Z, (byte) (voxels[i].ColorIndex - 1)));
             }
 
-            return new ChunkContent(Vector3.Zero, input.SizeX, input.SizeY, input.SizeZ, data.ToArray());
+            return new ChunkContent(Vector3.Zero, input.SizeX, input.SizeY, input.SizeZ, data.ToArray(), input.Palette);
         }
     }
 }

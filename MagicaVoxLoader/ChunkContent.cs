@@ -10,14 +10,16 @@ namespace MagicaVoxLoader
         public readonly int SizeY;
         public readonly int SizeZ;
         public readonly BlockData[] Blocks;
+        public readonly Color[] Palette;
 
-        public ChunkContent(Vector3 position, int sizeX, int sizeY, int sizeZ, BlockData[] blocks)
+        public ChunkContent(Vector3 position, int sizeX, int sizeY, int sizeZ, BlockData[] blocks, Color[] palette)
         {
             Position = position;
             SizeX = sizeX;
             SizeY = sizeY;
             SizeZ = sizeZ;
             Blocks = blocks;
+            Palette = palette;
         }
     }
 }

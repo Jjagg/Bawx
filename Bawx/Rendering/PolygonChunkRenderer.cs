@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx.Rendering
 {
@@ -6,7 +7,7 @@ namespace Bawx.Rendering
     {
         public override int FreeBlocks { get; }
 
-        public PolygonChunkRenderer(GraphicsDevice graphicsDevice) : base(graphicsDevice)
+        public PolygonChunkRenderer(GraphicsDevice graphicsDevice, Vector4[] palette) : base(graphicsDevice, palette)
         {
         }
 

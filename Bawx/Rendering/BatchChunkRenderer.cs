@@ -1,5 +1,6 @@
 ﻿using System;
 using Bawx.Util;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx.Rendering
@@ -18,7 +19,7 @@ namespace Bawx.Rendering
 
         public override int FreeBlocks => _vertices.Length - BlockCount;
 
-        public BatchChunkRenderer(GraphicsDevice graphicsDevice) : base(graphicsDevice)
+        public BatchChunkRenderer(GraphicsDevice graphicsDevice, Vector4[] palette) : base(graphicsDevice, palette)
         {
         }
 
@@ -35,7 +36,7 @@ namespace Bawx.Rendering
             {
                 var d = blockData[i];
                 // lots of garbage here maybe modfiy CubeBuilder to insert values into the array
-                var v = CubeBuilder.GetNormalColor(d.Position, d.Color);
+                var v = CubeBuilder.GetNormalColor(d.Position, new Color(Effect.Palette[d.Index]));
 
                 Array.Copy(v, 0, _vertices, i * v.Length, v.Length);
                 Array.Copy(inds, 0, _indices, i * inds.Length, inds.Length);

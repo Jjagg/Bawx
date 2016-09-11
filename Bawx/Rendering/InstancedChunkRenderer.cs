@@ -1,4 +1,5 @@
 ﻿using Bawx.Util;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx.Rendering
@@ -13,7 +14,7 @@ namespace Bawx.Rendering
 
         public override int FreeBlocks => _vertexBuffer == null ? 0 : _vertexBuffer.VertexCount - BlockCount;
 
-        public InstancedChunkRenderer(GraphicsDevice graphicsDevice) : base(graphicsDevice)
+        public InstancedChunkRenderer(GraphicsDevice graphicsDevice, Vector4[] palette) : base(graphicsDevice, palette)
         {
             _tmpBlockData = new BlockData[1];
             _bufferBindings = new VertexBufferBinding[2];

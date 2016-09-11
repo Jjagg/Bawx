@@ -1,4 +1,5 @@
 ﻿using Bawx.Rendering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -16,20 +17,18 @@ namespace Bawx
             var z = reader.ReadInt32();
             var pos = reader.ReadVector3();
 
-            var renderer = new InstancedChunkRenderer(gd);
-            var chunk = new Chunk(renderer, pos, x, y, z);
-
             var count = reader.ReadInt32();
             var blockData = new BlockData[count];
 
             for (var i = 0; i < count; i++)
-            {
-                var b = new BlockData();
-                b.Position = reader.ReadVector3();
-                b.Color = reader.ReadColor();
+                blockData[i] = new BlockData(reader.ReadUInt32());
 
-                blockData[i] = b;
-            }
+            var palette = new Vector4[255];
+            for (var i = 0; i < 255; i++)
+                palette[i] = reader.ReadColor().ToVector4();
+
+            var renderer = new InstancedChunkRenderer(gd, palette);
+            var chunk = new Chunk(renderer, pos, x, y, z);
 
             chunk.BuildChunk(blockData);
             return chunk;

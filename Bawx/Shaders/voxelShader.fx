@@ -2,7 +2,7 @@
 
 // Macros for targetting shader model 4.0 (DX11)
 #define TECHNIQUE(name, vsname, psname ) \
-	technique name { pass { VertexShader = compile vs_4_0_level_9_1 vsname (); PixelShader = compile ps_4_0_level_9_1 psname(); } }
+	technique name { pass { VertexShader = compile vs_4_0 vsname (); PixelShader = compile ps_4_0 psname(); } }
 #define DECLARE_TEXTURE(Name, index) \
     Texture2D<float4> Name : register(t##index); \
     sampler Name##Sampler : register(s##index)
@@ -19,8 +19,10 @@
 
 #endif
 
+float4 Palette[255];
+
 // Camera settings.
-float4 World;
+float3 ChunkPosition;
 float4x4 View;
 float4x4 Projection;
 
@@ -46,8 +48,8 @@ struct InstanceData
 
 struct BlockData
 {
-    float4 Color : COLOR0;
-    float4 Offset : POSITION1;
+    // first three components are position, fourth is palette index
+    float4 OffsetIndex : POSITION1;
 };
 
 
@@ -62,11 +64,11 @@ VertexShaderOutput DebugVS(InstanceData unitCube, BlockData blockData)
 {
     VertexShaderOutput output;
 
-    float4 worldPosition = World + unitCube.Position + blockData.Offset;
+    float4 worldPosition = float4(ChunkPosition + unitCube.Position.xyz + blockData.OffsetIndex.xyz, 1);
     float4 viewPosition = mul(worldPosition, View);
 
     output.Position = mul(viewPosition, Projection);
-    output.Color = blockData.Color;
+    output.Color = Palette[blockData.OffsetIndex.z];
 
     return output;
 }
@@ -76,7 +78,7 @@ VertexShaderOutput BatchVS(BatchInput input)
     VertexShaderOutput output;
 
     // Apply the world and camera matrices to compute the output position.
-    float4 worldPosition = World + input.Position;
+    float4 worldPosition = float4(ChunkPosition + input.Position.xyz, 1);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
 
@@ -95,7 +97,7 @@ VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
     VertexShaderOutput output;
 
     // Apply the world and camera matrices to compute the output position.
-    float4 worldPosition = World + unitCube.Position + blockData.Offset;
+    float4 worldPosition = float4(ChunkPosition + unitCube.Position.xyz + blockData.OffsetIndex.xyz, 1);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
 
@@ -104,7 +106,7 @@ VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
     float diffuseAmount = max(-dot(worldNormal, LightDirection), 0);
     float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
     
-    output.Color = float4(lightingResult, 1) * blockData.Color;
+    output.Color = float4(lightingResult, 1) * Palette[blockData.OffsetIndex.w];
 
     return output;
 }

@@ -17,7 +17,7 @@ namespace Bawx
             set
             {
                 _position = value;
-                Renderer.Effect.World = value;
+                Renderer.Effect.ChunkPosition = value;
             }
         }
 

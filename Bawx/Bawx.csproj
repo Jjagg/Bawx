@@ -49,6 +49,7 @@
     <Compile Include="Rendering\InstancedChunkRenderer.cs" />
     <Compile Include="Rendering\PolygonChunkRenderer.cs" />
     <Compile Include="Util\CubeBuilder.cs" />
+    <Compile Include="Util\Extensions.cs" />
     <Compile Include="VoxelBuffer.cs" />
     <Compile Include="BlockData.cs" />
     <Compile Include="VertexPositionNormal.cs" />
