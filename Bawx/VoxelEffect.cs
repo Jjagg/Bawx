@@ -132,7 +132,7 @@ namespace Bawx
         #endregion
 
         #region Light
-        private bool _lightDirty;
+        private bool _lightDirty = true;
 
         private Vector3 _lightDirection = Vector3.Normalize(new Vector3(-1f, -1f, -0.6f));
         public Vector3 LightDirection
@@ -178,6 +178,8 @@ namespace Bawx
 
         #endregion
 
+        #region ctor
+
         public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes($"Bawx.Shaders.voxelShader{ShaderExtension}.mgfxo"))
         {
             BatchTechnique = Techniques["Batch"];
@@ -194,16 +196,26 @@ namespace Bawx
             _ambientLightParam = Parameters["AmbientLight"];
         }
 
+        #endregion
+
+        #region OnApply
+
         protected override void OnApply()
         {
-            if (_paletteDirty) 
+            if (_paletteDirty)
+            {
                 _paletteParam.SetValue(Palette);
+
+                _paletteDirty = false;
+            }
 
             if (_cameraDirty)
             {
                 _positionParam?.SetValue(ChunkPosition);
                 _viewParam?.SetValue(View);
                 _projectionParam?.SetValue(Projection);
+
+                _cameraDirty = false;
             }
 
             if (_lightDirty)
@@ -211,7 +223,11 @@ namespace Bawx
                 _lightDirParam?.SetValue(LightDirection);
                 _diffuseLightParam?.SetValue(DiffuseLight);
                 _ambientLightParam?.SetValue(AmbientLight.ToVector3());
+
+                _lightDirty = false;
             }
         }
+
+        #endregion
     }
 }
