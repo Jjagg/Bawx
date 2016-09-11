@@ -31,6 +31,13 @@ float3 DiffuseLight = 1.25;
 float3 AmbientLight = 0.25;
 
 
+struct BatchInput
+{
+    float4 Position : POSITION0;
+    float3 Normal : NORMAL0;
+    float4 Color : COLOR0;
+};
+
 struct InstanceData
 {
     float4 Position : POSITION0;
@@ -64,6 +71,25 @@ VertexShaderOutput DebugVS(InstanceData unitCube, BlockData blockData)
     return output;
 }
 
+VertexShaderOutput BatchVS(BatchInput input)
+{
+    VertexShaderOutput output;
+
+    // Apply the world and camera matrices to compute the output position.
+    float4 worldPosition = World + input.Position;
+    float4 viewPosition = mul(worldPosition, View);
+    output.Position = mul(viewPosition, Projection);
+
+    // Compute lighting, using a simple Lambert model.
+    float3 worldNormal = input.Normal;
+    float diffuseAmount = max(-dot(worldNormal, LightDirection), 0);
+    float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
+    
+    output.Color = float4(lightingResult, 1) * input.Color;
+
+    return output;
+}
+
 VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
 {
     VertexShaderOutput output;
@@ -83,11 +109,13 @@ VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
     return output;
 }
 
-float4 InstancingPS(VertexShaderOutput input) : COLOR0
+float4 CommonPS(VertexShaderOutput input) : COLOR0
 {
     return input.Color;
 }
 
+
 // Hardware instancing technique.
-TECHNIQUE(Debug, DebugVS, InstancingPS);
-TECHNIQUE(Instancing, InstancingVS, InstancingPS);
+TECHNIQUE(Debug, DebugVS, CommonPS);
+TECHNIQUE(Batch, BatchVS, CommonPS);
+TECHNIQUE(Instancing, InstancingVS, CommonPS);

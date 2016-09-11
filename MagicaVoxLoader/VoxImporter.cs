@@ -18,7 +18,8 @@ namespace MagicaVoxLoader
         private const string VoxelChunkHeader = "XYZI";
         private const string PaletteChunkHeader = "RGBA";
 
-        private static readonly uint[] DefaultColorValues = {  0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
+        // ABGR!
+        private static readonly uint[] DefaultColorValues = {  0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
     0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
     0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,
     0xff00cccc, 0xffff99cc, 0xffcc99cc, 0xff9999cc, 0xff6699cc, 0xff3399cc, 0xff0099cc, 0xffff66cc, 0xffcc66cc, 0xff9966cc, 0xff6666cc, 0xff3366cc, 0xff0066cc, 0xffff33cc, 0xffcc33cc, 0xff9933cc,
@@ -47,12 +48,7 @@ namespace MagicaVoxLoader
                     for (var i = 0; i < 255; i++)
                     {
                         var v = DefaultColorValues[i];
-                        // format is ABGR
-                        _defaultPalette[i] = new Color(v & 0x000000ff, v & 0x0000ff00, v & 0x00ff0000, v & 0xff000000);
-                        // ARGB?
-                        //_defaultPalette[i] = new Color(v & 0x00ff0000, v & 0x0000ff00, v & 0x000000ff, v & 0xff000000);
-                        // RGBA?
-                        //_defaultPalette[i] = new Color(v & 0x0000ff00, v & 0x000000ff, v & 0xff000000, v & 0x00ff0000);
+                        _defaultPalette[i] = new Color((int)((v >> 0) & 0xFF), (int)((v >> 8) & 0xFF), (int)((v >> 16) & 0xFF), (int)((v >> 24) & 0xFF));
                     }
                 }
 

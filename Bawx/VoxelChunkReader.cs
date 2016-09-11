@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Bawx.Rendering;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx
@@ -15,7 +16,8 @@ namespace Bawx
             var z = reader.ReadInt32();
             var pos = reader.ReadVector3();
 
-            var chunk = new Chunk(gd, new VoxelEffect(gd), pos, x, y, z);
+            var renderer = new InstancedChunkRenderer(gd);
+            var chunk = new Chunk(renderer, pos, x, y, z);
 
             var count = reader.ReadInt32();
             var blockData = new BlockData[count];

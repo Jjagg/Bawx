@@ -39,6 +39,13 @@ namespace Bawx
 
         #endregion
 
+        #region Techniques
+
+        public EffectTechnique BatchTechnique;
+        public EffectTechnique InstancingTechnique;
+
+        #endregion
+
         #region Params
 
         private readonly EffectParameter _worldParam;
@@ -62,6 +69,9 @@ namespace Bawx
 
         public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes($"Bawx.Shaders.voxelShader{ShaderExtension}.mgfxo"))
         {
+            BatchTechnique = Techniques["Batch"];
+            InstancingTechnique = Techniques["Instancing"];
+
             _worldParam = Parameters["World"];
             _viewParam = Parameters["View"];
             _projectionParam = Parameters["Projection"];

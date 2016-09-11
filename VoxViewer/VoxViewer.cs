@@ -96,7 +96,6 @@ namespace VoxViewer
                 var chunk = Content.Load<Chunk>(model);
                 _modelChunks.Add(chunk);
                 chunk.Position = new Vector3(-chunk.SizeX/2, -chunk.SizeY/2, -chunk.SizeZ/2);
-                chunk.Effect.CurrentTechnique = chunk.Effect.Techniques["Instancing"];
             }
         }
 
@@ -112,9 +111,8 @@ namespace VoxViewer
             _viewMatrix = Matrix.CreateLookAt(_cameraRotationMatrix.Translation, CurrentChunk.Center, Vector3.Up);
             _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _graphics.GraphicsDevice.Viewport.AspectRatio, 1, CurrentChunk.SizeZ*2 + 70);
 
-            CurrentChunk.Effect.View = _viewMatrix;
-            CurrentChunk.Effect.Projection = _projectionMatrix;
-
+            CurrentChunk.Renderer.Effect.View = _viewMatrix;
+            CurrentChunk.Renderer.Effect.Projection = _projectionMatrix;
 
             base.Update(gameTime);
         }

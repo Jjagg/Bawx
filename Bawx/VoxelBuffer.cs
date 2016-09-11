@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Xna.Framework;
+using Bawx.Util;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx
@@ -123,101 +123,13 @@ namespace Bawx
         private static VertexBuffer _normalUnitCube;
         private static IndexBuffer _unitCubeIndexBuffer;
 
-        private static VertexBuffer GetNormalColorUnitCube(GraphicsDevice device)
-        {
-            if (_normalColorUnitCube == null)
-            {
-                _normalColorUnitCube = new VertexBuffer(device, VertexPositionNormalColor.VertexDeclaration, 6*4,
-                    BufferUsage.WriteOnly);
-                _normalColorUnitCube.SetData(new[]
-                {
-
-                    // Front
-                    new VertexPositionNormalColor(new Vector3(-0.5f, -0.5f, -0.5f), -Vector3.UnitZ, new Color(255, 0, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, -0.5f, -0.5f), -Vector3.UnitZ, new Color(255, 0, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, 0.5f, -0.5f), -Vector3.UnitZ, new Color(255, 0, 0)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, 0.5f, -0.5f), -Vector3.UnitZ, new Color(255, 0, 0)),
-
-                    // Back
-                    new VertexPositionNormalColor(new Vector3(-0.5f, -0.5f, 0.5f), Vector3.UnitZ, new Color(128, 0, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, -0.5f, 0.5f), Vector3.UnitZ, new Color(128, 0, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, 0.5f, 0.5f), Vector3.UnitZ, new Color(128, 0, 0)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, 0.5f, 0.5f), Vector3.UnitZ, new Color(128, 0, 0)),
-
-                    // Top
-                    new VertexPositionNormalColor(new Vector3(-0.5f, -0.5f, -0.5f), -Vector3.UnitY, new Color(0, 255, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, -0.5f, -0.5f), -Vector3.UnitY, new Color(0, 255, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, -0.5f, 0.5f), -Vector3.UnitY, new Color(0, 255, 0)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, -0.5f, 0.5f), -Vector3.UnitY, new Color(0, 255, 0)),
-
-                    // Bottom
-                    new VertexPositionNormalColor(new Vector3(-0.5f, 0.5f, -0.5f), Vector3.UnitY, new Color(0, 128, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, 0.5f, -0.5f), Vector3.UnitY, new Color(0, 128, 0)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, 0.5f, 0.5f), Vector3.UnitY, new Color(0, 128, 0)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, 0.5f, 0.5f), Vector3.UnitY, new Color(0, 128, 0)),
-
-                    // Left
-                    new VertexPositionNormalColor(new Vector3(-0.5f, -0.5f, -0.5f), -Vector3.UnitX, new Color(0, 0, 255)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, -0.5f, 0.5f), -Vector3.UnitX, new Color(0, 0, 255)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, 0.5f, 0.5f), -Vector3.UnitX, new Color(0, 0, 255)),
-                    new VertexPositionNormalColor(new Vector3(-0.5f, 0.5f, -0.5f), -Vector3.UnitX, new Color(0, 0, 255)),
-
-                    // Right
-                    new VertexPositionNormalColor(new Vector3(0.5f, -0.5f, -0.5f), Vector3.UnitX, new Color(0, 0, 128)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, -0.5f, 0.5f), Vector3.UnitX, new Color(0, 0, 128)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, 0.5f, 0.5f), Vector3.UnitX, new Color(0, 0, 128)),
-                    new VertexPositionNormalColor(new Vector3(0.5f, 0.5f, -0.5f), Vector3.UnitX, new Color(0, 0, 128)),
-                });
-            }
-
-            return _normalColorUnitCube;
-        }
-
         private static VertexBuffer GetNormalUnitCube(GraphicsDevice device)
         {
             if (_normalUnitCube == null)
             {
                 _normalUnitCube = new VertexBuffer(device, VertexPositionNormal.VertexDeclaration, 6*4,
                     BufferUsage.WriteOnly);
-                _normalUnitCube.SetData(new[]
-                {
-
-                    // Front
-                    new VertexPositionNormal(new Vector3(-0.5f, -0.5f, -0.5f), -Vector3.UnitZ),
-                    new VertexPositionNormal(new Vector3(0.5f, -0.5f, -0.5f), -Vector3.UnitZ),
-                    new VertexPositionNormal(new Vector3(0.5f, 0.5f, -0.5f), -Vector3.UnitZ),
-                    new VertexPositionNormal(new Vector3(-0.5f, 0.5f, -0.5f), -Vector3.UnitZ),
-
-                    // Back
-                    new VertexPositionNormal(new Vector3(-0.5f, -0.5f, 0.5f), Vector3.UnitZ),
-                    new VertexPositionNormal(new Vector3(0.5f, -0.5f, 0.5f), Vector3.UnitZ),
-                    new VertexPositionNormal(new Vector3(0.5f, 0.5f, 0.5f), Vector3.UnitZ),
-                    new VertexPositionNormal(new Vector3(-0.5f, 0.5f, 0.5f), Vector3.UnitZ),
-
-                    // Top
-                    new VertexPositionNormal(new Vector3(-0.5f, -0.5f, -0.5f), -Vector3.UnitY),
-                    new VertexPositionNormal(new Vector3(0.5f, -0.5f, -0.5f), -Vector3.UnitY),
-                    new VertexPositionNormal(new Vector3(0.5f, -0.5f, 0.5f), -Vector3.UnitY),
-                    new VertexPositionNormal(new Vector3(-0.5f, -0.5f, 0.5f), -Vector3.UnitY),
-
-                    // Bottom
-                    new VertexPositionNormal(new Vector3(-0.5f, 0.5f, -0.5f), Vector3.UnitY),
-                    new VertexPositionNormal(new Vector3(0.5f, 0.5f, -0.5f), Vector3.UnitY),
-                    new VertexPositionNormal(new Vector3(0.5f, 0.5f, 0.5f), Vector3.UnitY),
-                    new VertexPositionNormal(new Vector3(-0.5f, 0.5f, 0.5f), Vector3.UnitY),
-
-                    // Left
-                    new VertexPositionNormal(new Vector3(-0.5f, -0.5f, -0.5f), -Vector3.UnitX),
-                    new VertexPositionNormal(new Vector3(-0.5f, -0.5f, 0.5f), -Vector3.UnitX),
-                    new VertexPositionNormal(new Vector3(-0.5f, 0.5f, 0.5f), -Vector3.UnitX),
-                    new VertexPositionNormal(new Vector3(-0.5f, 0.5f, -0.5f), -Vector3.UnitX),
-
-                    // Right
-                    new VertexPositionNormal(new Vector3(0.5f, -0.5f, -0.5f), Vector3.UnitX),
-                    new VertexPositionNormal(new Vector3(0.5f, -0.5f, 0.5f), Vector3.UnitX),
-                    new VertexPositionNormal(new Vector3(0.5f, 0.5f, 0.5f), Vector3.UnitX),
-                    new VertexPositionNormal(new Vector3(0.5f, 0.5f, -0.5f), Vector3.UnitX),
-                });
+                _normalUnitCube.SetData(CubeBuilder.GetNormal());
             }
 
             return _normalUnitCube;
@@ -228,32 +140,7 @@ namespace Bawx
             if (_unitCubeIndexBuffer == null)
             {
                 _unitCubeIndexBuffer = new IndexBuffer(device, IndexElementSize.SixteenBits, 6*2*3, BufferUsage.None);
-                _unitCubeIndexBuffer.SetData(new short[]
-                {
-                    // Front
-                    0, 1, 2,
-                    2, 3, 0,
-
-                    // Back
-                    6, 5, 4,
-                    4, 7, 6,
-
-                    // Top
-                    10, 9, 8,
-                    8, 11, 10,
-
-                    // Bottom
-                    12, 13, 14,
-                    14, 15, 12,
-
-                    // Left
-                    18, 17, 16,
-                    16, 19, 18,
-
-                    // Right
-                    20, 21, 22,
-                    22, 23, 20,
-                });
+                _unitCubeIndexBuffer.SetData(CubeBuilder.GetShortIndices());
             }
 
             return _unitCubeIndexBuffer;

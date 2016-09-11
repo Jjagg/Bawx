@@ -44,6 +44,11 @@
     <Compile Include="IBounded.cs" />
     <Compile Include="BoundingOctree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\BatchChunkRenderer.cs" />
+    <Compile Include="Rendering\ChunkRenderer.cs" />
+    <Compile Include="Rendering\InstancedChunkRenderer.cs" />
+    <Compile Include="Rendering\PolygonChunkRenderer.cs" />
+    <Compile Include="Util\CubeBuilder.cs" />
     <Compile Include="VoxelBuffer.cs" />
     <Compile Include="BlockData.cs" />
     <Compile Include="VertexPositionNormal.cs" />
