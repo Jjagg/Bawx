@@ -63,12 +63,12 @@ namespace VoxViewer
             _font = Content.Load<SpriteFont>("font");
 
             // nice gradient background
-            const int resolution = 16;
+            const int resolution = 30;
             _background = new Texture2D(_graphics.GraphicsDevice, 1, resolution);
             var gradient = new Color[resolution];
             for (var i = 0; i < resolution; i++)
             {
-                var val = Remap((float)i/resolution, 0f, 1f, 0.5f, 0.8f);
+                var val = Remap((float)i/resolution, 0f, 1f, 0.3f, 0.75f);
                 gradient[i] = new Color(val, val, val, 1f);
             }
             _background.SetData(gradient);
@@ -95,7 +95,7 @@ namespace VoxViewer
             {
                 var chunk = Content.Load<Chunk>(model);
                 _modelChunks.Add(chunk);
-                chunk.Position = new Vector3(-chunk.SizeX/2, -chunk.SizeY/2, -chunk.SizeZ/2);
+                chunk.Position = -chunk.Center;
             }
         }
 
@@ -104,12 +104,12 @@ namespace VoxViewer
             HandleInput();
 
             _cameraAngle += 25f * (float) gameTime.ElapsedGameTime.TotalSeconds;
-            _cameraRotationMatrix = Matrix.CreateTranslation(CurrentChunk.Center + new Vector3(0, 0, CurrentChunk.SizeZ + 50))*
+            _cameraRotationMatrix = Matrix.CreateTranslation(CurrentChunk.Center + new Vector3(0, 0, CurrentChunk.SizeZ + 100))*
                                     Matrix.CreateRotationX(-MathHelper.Pi/12f)*
                                     Matrix.CreateRotationY(MathHelper.ToRadians(_cameraAngle));
 
             _viewMatrix = Matrix.CreateLookAt(_cameraRotationMatrix.Translation, CurrentChunk.Center, Vector3.Up);
-            _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _graphics.GraphicsDevice.Viewport.AspectRatio, 1, CurrentChunk.SizeZ*2 + 70);
+            _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _graphics.GraphicsDevice.Viewport.AspectRatio, 1, CurrentChunk.SizeZ*2 + 120);
 
             CurrentChunk.Renderer.Effect.View = _viewMatrix;
             CurrentChunk.Renderer.Effect.Projection = _projectionMatrix;
@@ -124,7 +124,7 @@ namespace VoxViewer
             _deviceState.Push();
 
             // Render the background
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
             _spriteBatch.End();
             _deviceState.Pop();
@@ -205,131 +205,5 @@ namespace VoxViewer
                 GraphicsDevice.RasterizerState = _wireframeRasterizerState;
         }
 
-        /*private VertexPositionColor[] cubeVertexData;
-        private int[] cubeIndexData;
-
-        private VoxelData[] voxels;
-        private VoxelScene scene;
-        */
-
-        /*
-        protected override void Initialize()
-        {
-            CreateCube(Color.White, out cubeVertexData, out cubeIndexData);
-
-            base.Initialize();
-        }
-
-
-        protected override void LoadContent()
-        {
-            spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
-            background = new Texture2D(graphics.GraphicsDevice, 1, 1);
-            background.SetData(new [] { Color.Gray });
-
-            scene = Content.Load<VoxelScene>("monu1");
-            voxels = scene.Voxels;
-        }
-
-        public void CreateCube(Color color, out VertexPositionColor[] vertexData, out int[] indexData)
-        {
-
-            vertexData = new []
-            {
-
-                // front
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, -0.5f), color),
-
-                // top
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, 0.5f), color),
-
-                // back
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, 0.5f), color),
-
-                // bottom
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), color),
-
-                // left
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, -0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(-0.5f, 0.5f, -0.5f), color),
-
-                // right
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, -0.5f, 0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, -0.5f), color),
-                new VertexPositionColor(new Vector3(0.5f, 0.5f, 0.5f), color),
-
-            };
-
-            indexData = new [] { 
-                0, 1, 2, 3, 2, 1,
-                4, 5, 6, 7, 6, 5,
-                8, 9, 10, 11, 10, 9,
-                12, 13, 14, 15, 14, 13,
-                16, 17, 18, 19, 18, 17,
-                20, 21, 22, 23, 22, 21
-             };
-
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            spriteBatch.Begin();
-            spriteBatch.Draw(background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
-            spriteBatch.End();
-
-            cameraAngle += 2.5f;
-            cameraRotationMatrix =  Matrix.CreateTranslation(new Vector3(0, 0, 40)) * Matrix.CreateRotationY(MathHelper.ToRadians(cameraAngle));
-  
-            viewMatrix = Matrix.CreateLookAt(cameraRotationMatrix.Translation, new Vector3(-10, 5, 10), Vector3.Up);
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, graphics.GraphicsDevice.Viewport.AspectRatio, 1, 100);
-
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default; 
-
-            var blockCount = voxels.Length;
-
-            var effect = new BasicEffect(graphics.GraphicsDevice);
-            effect.View = viewMatrix;
-            effect.Projection = projectionMatrix;
-
-            lock (voxels)
-            {
-                for (int i = 0; i < blockCount; i++)
-                {
-                    var voxel = voxels[i];
-                    effect.DiffuseColor = voxel.Color.ToVector3();
-                    effect.ChunkPosition = Matrix.CreateTranslation(voxel.X, voxel.Y, voxel.Z);
-                    effect.ChunkPosition = effect.ChunkPosition * Matrix.CreateRotationX(MathHelper.ToRadians(90)) * Matrix.CreateRotationZ(MathHelper.ToRadians(180));
-
-                    foreach (var pass in effect.CurrentTechnique.Passes)
-                    {
-                        pass.Apply();
-                        GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, cubeVertexData, 0, 4 * 6, cubeIndexData, 0, cubeIndexData.Length / 3);
-                    }
-
-                }
-            }
-
-            base.Draw(gameTime); 
-           
-        }
-        */
     }
 }
