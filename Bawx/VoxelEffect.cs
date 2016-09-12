@@ -84,7 +84,7 @@ namespace Bawx
 
         #region Camera
 
-        private bool _cameraDirty;
+        private bool _cameraDirty = true;
 
         private Vector3 _chunkPosition;
         public Vector3 ChunkPosition
@@ -101,7 +101,7 @@ namespace Bawx
             }
         }
 
-        private Matrix _view;
+        private Matrix _view = Matrix.Identity;
         public Matrix View
         {
             get { return _view; }
@@ -115,7 +115,7 @@ namespace Bawx
             }
         }
 
-        private Matrix _projection;
+        private Matrix _projection = Matrix.Identity;
         public Matrix Projection
         {
             get { return _projection; }
