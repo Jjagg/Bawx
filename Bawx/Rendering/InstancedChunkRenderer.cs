@@ -10,7 +10,7 @@ namespace Bawx.Rendering
         private readonly VertexBufferBinding[] _bufferBindings;
         // the instance vertex buffer
         private VertexBuffer _vertexBuffer;
-        private int _instanceCount;
+        private int _activeCount;
 
         public override int FreeBlocks => _vertexBuffer == null ? 0 : _vertexBuffer.VertexCount - BlockCount;
 
@@ -21,18 +21,19 @@ namespace Bawx.Rendering
             _bufferBindings[0] = new VertexBufferBinding(CubeBuilder.GetNormalBuffer(graphicsDevice), 0, 0);
         }
 
-        protected override void InitializeInternal(BlockData[] data, int maxBlocks)
+        protected override void InitializeInternal(BlockData[] data, int active, int maxBlocks)
         {
             _vertexBuffer = new VertexBuffer(GraphicsDevice, BlockData.VertexDeclaration, maxBlocks, BufferUsage.WriteOnly);
             _vertexBuffer.SetData(data);
             _bufferBindings[1] = new VertexBufferBinding(_vertexBuffer, 0, 1);
 
-            _instanceCount = data.Length;
+            _activeCount = active;
         }
 
         public override void SetBlock(BlockData block, int index)
         {
-            if (index >= BlockCount) _instanceCount = index + 1;
+            // TODO take active blocks into account
+            if (index >= BlockCount) _activeCount = index + 1;
             _tmpBlockData[0] = block;
             _vertexBuffer.SetData(BlockDataSize * index, _tmpBlockData, 0, 1, BlockDataSize);
         }
@@ -56,7 +57,7 @@ namespace Bawx.Rendering
             GraphicsDevice.SetVertexBuffers(_bufferBindings);
             GraphicsDevice.Indices = CubeBuilder.GetShortIndexBuffer(GraphicsDevice);
             GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 0, 0, 
-                12, _instanceCount);
+                12, _activeCount);
         }
 
         protected override void Dispose(bool disposing)

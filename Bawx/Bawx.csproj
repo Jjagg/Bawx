@@ -40,6 +40,7 @@
     <Compile Include="BytePosition3.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Chunk.cs" />
+    <Compile Include="ChunkCollection.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GraphicsStateStack.cs" />
     <Compile Include="IBounded.cs" />

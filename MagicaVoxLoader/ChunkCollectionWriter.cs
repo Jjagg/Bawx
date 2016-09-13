@@ -4,23 +4,24 @@ using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 namespace MagicaVoxLoader
 {
     [ContentTypeWriter]
-    public class VoxelChunkWriter : ContentTypeWriter<ChunkContent>
+    public class ChunkCollectionWriter : ContentTypeWriter<ChunkContentCollection>
     {
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
             return "Bawx.VoxelChunkReader, Bawx";
         }
 
-        protected override void Write(ContentWriter output, ChunkContent value)
+        protected override void Write(ContentWriter output, ChunkContentCollection chunks)
         {
+            var value = chunks.Chunks[1];
             output.Write(value.SizeX);
             output.Write(value.SizeY);
             output.Write(value.SizeZ);
             output.Write(value.Position);
-            var count = value.Blocks.Length;
-            output.Write(count);
+            output.Write(value.BlockCount);
+            output.Write(value.ActiveBlocks);
 
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < value.BlockCount; i++)
             {
                 var b = value.Blocks[i];
                 output.Write(b.X);

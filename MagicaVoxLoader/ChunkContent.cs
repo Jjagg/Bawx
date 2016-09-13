@@ -11,8 +11,10 @@ namespace MagicaVoxLoader
         public readonly int SizeZ;
         public readonly BlockData[] Blocks;
         public readonly Color[] Palette;
+        public readonly int ActiveBlocks;
+        public int BlockCount => Blocks.Length;
 
-        public ChunkContent(Vector3 position, int sizeX, int sizeY, int sizeZ, BlockData[] blocks, Color[] palette)
+        public ChunkContent(Vector3 position, int sizeX, int sizeY, int sizeZ, BlockData[] blocks, Color[] palette, int activeBlocks)
         {
             Position = position;
             SizeX = sizeX;
@@ -20,6 +22,7 @@ namespace MagicaVoxLoader
             SizeZ = sizeZ;
             Blocks = blocks;
             Palette = palette;
+            ActiveBlocks = activeBlocks;
         }
     }
 }

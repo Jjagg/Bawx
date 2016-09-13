@@ -178,7 +178,7 @@ namespace Bawx
             }
         }
 
-        private Color _ambientLight = new Color(0.35f, 0.35f, 0.35f);
+        private Color _ambientLight = new Color(0.4f, 0.4f, 0.4f);
         public Color AmbientLight
         {
             get { return _ambientLight; }

@@ -23,7 +23,7 @@ namespace Bawx.Rendering
         {
         }
 
-        protected override void InitializeInternal(BlockData[] blockData, int maxBlocks)
+        protected override void InitializeInternal(BlockData[] blockData, int active, int maxBlocks)
         {
             _vertexCount = blockData.Length*24;
             _indexCount = blockData.Length*36;

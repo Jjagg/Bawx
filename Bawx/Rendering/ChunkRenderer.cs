@@ -75,9 +75,13 @@ namespace Bawx.Rendering
         /// <summary>
         /// Initialize this renderer for the given chunk with the given block data.
         /// </summary>
-        /// <param name="blockData"></param>
-        /// <param name="maxBlocks"></param>
-        public void Initialize(BlockData[] blockData, int? maxBlocks = null)
+        /// <param name="blockData">The blocks that must be rendered.</param>
+        /// <param name="active">The number of active blocks. Active blocks must precede inactive blocks in blockData.</param>
+        /// <param name="maxBlocks">
+        /// The total number of blocks to make room for. Some renderers need to resize a buffer when they get full,
+        /// so this parameter can be used to reserve some extra room from the start.
+        /// </param>
+        public void Initialize(BlockData[] blockData, int active, int? maxBlocks = null)
         {
             if (!Assigned)
                 throw new InvalidOperationException("Renderer must be assigned to a chunk before calling Initialize!");
@@ -85,14 +89,14 @@ namespace Bawx.Rendering
             if (Initialized)
                 Dispose();
 
-            InitializeInternal(blockData, maxBlocks ?? blockData.Length);
+            InitializeInternal(blockData, active, maxBlocks ?? blockData.Length);
 
             _currentIndex += blockData.Length;
 
             Initialized = true;
         }
 
-        protected abstract void InitializeInternal(BlockData[] blockData, int maxBlocks);
+        protected abstract void InitializeInternal(BlockData[] blockData, int active, int maxBlocks);
 
         #endregion Initialization
 

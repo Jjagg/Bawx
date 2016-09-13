@@ -18,6 +18,7 @@ namespace Bawx
             var pos = reader.ReadVector3();
 
             var count = reader.ReadInt32();
+            var activeCount = reader.ReadInt32();
             var blockData = new BlockData[count];
 
             for (var i = 0; i < count; i++)
@@ -36,7 +37,7 @@ namespace Bawx
             var renderer = new InstancedChunkRenderer(gd, palette);
             var chunk = new Chunk(renderer, pos, sizeX, sizeY, sizeZ);
 
-            chunk.BuildChunk(blockData);
+            chunk.BuildChunk(blockData, activeCount);
             return chunk;
         }
 

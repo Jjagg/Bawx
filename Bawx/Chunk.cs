@@ -67,7 +67,7 @@ namespace Bawx
             // TODO store the blocks in a more manageable format
         }
 
-        public void BuildChunk(BlockData[] data, bool rebuild = false)
+        public void BuildChunk(BlockData[] data, int? activeCount = null, bool rebuild = false)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
@@ -75,8 +75,11 @@ namespace Bawx
                 throw new ArgumentException("Too much data for this chunk.", nameof(data));
             if (Renderer.Initialized && !rebuild)
                 throw new InvalidOperationException("Chunk is already built, to override set the rebuild flag.");
+            if (activeCount < 0 || activeCount > data.Length)
+                throw new ArgumentOutOfRangeException(nameof(activeCount));
 
-            Renderer.Initialize(data);
+            var active = activeCount ?? data.Length;
+            Renderer.Initialize(data, active);
             // TODO store the blocks in a more manageable format (octree probably)
         }
 

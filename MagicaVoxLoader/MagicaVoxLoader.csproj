@@ -44,10 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChunkContent.cs" />
+    <Compile Include="ChunkContentCollection.cs" />
     <Compile Include="MagicaVoxel.cs" />
     <Compile Include="VoxContent.cs" />
-    <Compile Include="VoxelChunkProcessor.cs" />
-    <Compile Include="VoxelChunkWriter.cs" />
+    <Compile Include="VoxChunkProcessor.cs" />
+    <Compile Include="ChunkCollectionWriter.cs" />
     <Compile Include="VoxelSceneWriter.cs" />
     <Compile Include="VoxImporter.cs" />
     <Compile Include="VoxelSceneProcessor.cs" />
