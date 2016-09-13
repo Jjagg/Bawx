@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
+using Bawx.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Bawx
 {
@@ -44,6 +44,9 @@ namespace Bawx
 
         public EffectTechnique BatchTechnique;
         public EffectTechnique InstancingTechnique;
+        public EffectTechnique InstancingDepthTechnique;
+        public EffectTechnique InstancingWithShadowTechnique;
+        public EffectTechnique InstancingShadowMapTechnique;
 
         #endregion
 
@@ -55,12 +58,14 @@ namespace Bawx
         private readonly EffectParameter _viewParam;
         private readonly EffectParameter _projectionParam;
 
+        private readonly EffectParameter _dirLightMatrixParam;
         private readonly EffectParameter _lightDirParam;
         private readonly EffectParameter _diffuseLightParam;
         private readonly EffectParameter _ambientLightParam;
 
-        #endregion
+        private readonly EffectParameter _shadowMapParam;
 
+        #endregion
 
         #region Palette
 
@@ -85,6 +90,7 @@ namespace Bawx
         #region Camera
 
         private bool _cameraDirty = true;
+        private bool _lightMatrixDirty = true;
 
         private Vector3 _chunkPosition;
         public Vector3 ChunkPosition
@@ -111,6 +117,7 @@ namespace Bawx
                 {
                     _view = value;
                     _cameraDirty = true;
+                    _lightMatrixDirty = true;
                 }
             }
         }
@@ -125,6 +132,7 @@ namespace Bawx
                 {
                     _projection = value;
                     _cameraDirty = true;
+                    _lightMatrixDirty = true;
                 }
             }
         }
@@ -132,9 +140,16 @@ namespace Bawx
         #endregion
 
         #region Light
+
+        /// <summary>
+        /// Keep at false to automatically compute the light View Projection matrix based on camera frustrum.
+        /// If you manually want to set the lights matrix for more precision set to true.
+        /// </summary>
+        public bool ManualLightMatrix = false;
+
         private bool _lightDirty = true;
 
-        private Vector3 _lightDirection = Vector3.Normalize(new Vector3(-1f, -1f, -0.6f));
+        private Vector3 _lightDirection = Vector3.Normalize(new Vector3(-1f, -0.8f, -0.6f));
         public Vector3 LightDirection
         {
             get { return _lightDirection; }
@@ -144,6 +159,7 @@ namespace Bawx
                 {
                     _lightDirection = value;
                     _lightDirty = true;
+                    _lightMatrixDirty = true;
                 }
             }
         }
@@ -178,12 +194,35 @@ namespace Bawx
 
         #endregion
 
+        #region ShadowMap
+
+        private bool _shadowMapDirty;
+
+        private RenderTarget2D _shadowMap;
+        public RenderTarget2D ShadowMap
+        {
+            get { return _shadowMap; }
+            set
+            {
+                if (_shadowMap != value)
+                {
+                    _shadowMap = value;
+                    _shadowMapDirty = true;
+                }
+            }
+        }
+
+        #endregion
+
         #region ctor
 
         public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes($"Bawx.Shaders.voxelShader{ShaderExtension}.mgfxo"))
         {
             BatchTechnique = Techniques["Batch"];
             InstancingTechnique = Techniques["Instancing"];
+            InstancingDepthTechnique = Techniques["InstancingDepth"];
+            InstancingWithShadowTechnique = Techniques["InstancingWithShadow"];
+            InstancingShadowMapTechnique = Techniques["InstancingShadowMap"];
 
             _paletteParam = Parameters["Palette"];
 
@@ -191,9 +230,12 @@ namespace Bawx
             _viewParam = Parameters["View"];
             _projectionParam = Parameters["Projection"];
 
+            _dirLightMatrixParam = Parameters["DirectionalLightMatrix"];
             _lightDirParam = Parameters["LightDirection"];
             _diffuseLightParam = Parameters["DiffuseLight"];
             _ambientLightParam = Parameters["AmbientLight"];
+
+            _shadowMapParam = Parameters["ShadowMap"];
         }
 
         #endregion
@@ -207,6 +249,13 @@ namespace Bawx
                 _paletteParam.SetValue(Palette);
 
                 _paletteDirty = false;
+            }
+
+            if (!ManualLightMatrix && _lightMatrixDirty)
+            {
+                var mat = LightDirection.GetViewProjectionMatrix(new BoundingFrustum(_view*_projection));
+                _dirLightMatrixParam?.SetValue(mat);
+                _lightMatrixDirty = false;
             }
 
             if (_cameraDirty)
@@ -225,6 +274,12 @@ namespace Bawx
                 _ambientLightParam?.SetValue(AmbientLight.ToVector3());
 
                 _lightDirty = false;
+            }
+
+            if (_shadowMapDirty)
+            {
+                _shadowMapParam?.SetValue(_shadowMap);
+                _shadowMapDirty = false;
             }
         }
 

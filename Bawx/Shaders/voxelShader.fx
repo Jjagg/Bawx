@@ -19,31 +19,17 @@
 
 #endif
 
-float4 Palette[255];
-
-// Camera settings.
-float3 ChunkPosition;
-float4x4 View;
-float4x4 Projection;
-
-
-// This sample uses a simple Lambert lighting model.
-float3 LightDirection = normalize(float3(-1, -1, -1));
-float3 DiffuseLight = 1.25;
-float3 AmbientLight = 0.25;
-
-
 struct BatchInput
 {
     float4 Position : POSITION0;
-    float3 Normal : NORMAL0;
-    float4 Color : COLOR0;
+    float3 Normal   : NORMAL0;
+    float4 Color    : COLOR0;
 };
 
-struct InstanceData
+struct CubeData
 {
     float4 Position : POSITION0;
-    float3 Normal : NORMAL0;
+    float3 Normal   : NORMAL0;
 };
 
 struct BlockData
@@ -56,11 +42,39 @@ struct BlockData
 struct VertexShaderOutput
 {
     float4 Position : POSITION0;
-    float4 Color : COLOR0;
+    float4 Color    : COLOR0;
 };
 
+struct WithShadowOutput
+{
+    float4 Position : POSITION0;
+    float4 Color    : COLOR0;
+    float3 Diffuse  : COLOR1;
+    float4 WorldPos : TEXCOORD0;
+};
 
-VertexShaderOutput DebugVS(InstanceData unitCube, BlockData blockData)
+struct ShadowMapOutput
+{
+    float4 Position : POSITION0;
+    float Depth     : TEXCOORD0;
+};
+
+float4 Palette[255];
+
+// Camera settings.
+float3 ChunkPosition;
+float4x4 View;
+float4x4 Projection;
+
+matrix DirectionalLightMatrix;
+float3 LightDirection = normalize(float3(-1, -1, -1));
+float3 DiffuseLight = 1.25;
+float3 AmbientLight = 0.25;
+
+float DepthBias = 0.001f;
+DECLARE_TEXTURE(ShadowMap, 0);
+
+VertexShaderOutput DebugVS(CubeData unitCube, BlockData blockData)
 {
     VertexShaderOutput output;
 
@@ -92,7 +106,7 @@ VertexShaderOutput BatchVS(BatchInput input)
     return output;
 }
 
-VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
+VertexShaderOutput InstancingVS(CubeData unitCube, BlockData blockData)
 {
     VertexShaderOutput output;
 
@@ -102,8 +116,7 @@ VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
     output.Position = mul(viewPosition, Projection);
 
     // Compute lighting, using a simple Lambert model.
-    float3 worldNormal = unitCube.Normal;
-    float diffuseAmount = max(-dot(worldNormal, LightDirection), 0);
+    float diffuseAmount = max(-dot(unitCube.Normal, LightDirection), 0);
     float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
     
     output.Color = float4(lightingResult, 1) * Palette[blockData.OffsetIndex.w];
@@ -111,13 +124,87 @@ VertexShaderOutput InstancingVS(InstanceData unitCube, BlockData blockData)
     return output;
 }
 
+WithShadowOutput InstancingWithShadowVS(CubeData unitCube, BlockData blockData)
+{
+    WithShadowOutput output;
+
+    float4 worldPosition = float4(ChunkPosition + unitCube.Position.xyz + blockData.OffsetIndex.xyz, 1);
+    float4 viewPosition = mul(worldPosition, View);
+    output.Position = mul(viewPosition, Projection);
+
+    // Color lookup
+    output.Color = Palette[blockData.OffsetIndex.w];
+
+    // Compute lighting, using a simple Lambert model.
+    float diffuseAmount = max(-dot(unitCube.Normal, LightDirection), 0);
+    output.Diffuse = diffuseAmount * DiffuseLight;
+    
+    // for finding the shadowmap coordinates
+    output.WorldPos = worldPosition;
+
+    return output;
+}
+
+float4 InstancingWithShadowPS(WithShadowOutput input) : COLOR0
+{
+    // Find the position of this pixel in light space
+    float4 lightingPosition = mul(input.WorldPos, DirectionalLightMatrix);
+
+    float2 ShadowTexCoord = 0.5 * lightingPosition.xy / lightingPosition.w + 0.5;
+    ShadowTexCoord.y = 1.0f - ShadowTexCoord.y;
+
+    // Get the current depth stored in the shadow map
+    float shadowDepth = SAMPLE_TEXTURE(ShadowMap, ShadowTexCoord).r;
+    
+    // Calculate the current pixel depth
+    // The bias is used to prevent floating point errors that occur when
+    // the pixel of the occluder is being drawn
+    float currentDepth = (lightingPosition.z / lightingPosition.w) - DepthBias;
+
+    float3 light = AmbientLight;
+
+    if (currentDepth < shadowDepth)
+        light += input.Diffuse;
+
+    return float4(saturate(light), 1)*input.Color;
+}
+
+ShadowMapOutput InstancingShadowMapVS(CubeData unitCube, BlockData blockData)
+{
+    ShadowMapOutput output;
+    float4 worldPosition = float4(ChunkPosition + unitCube.Position.xyz + blockData.OffsetIndex.xyz, 1);
+    output.Position = mul(worldPosition, DirectionalLightMatrix);
+    output.Depth = output.Position.z / output.Position.w;
+    return output;
+}
+
+float4 ShadowMapPS(ShadowMapOutput input) : COLOR0
+{
+    return float4(input.Depth, 0, 0, 0);
+}
+
 float4 CommonPS(VertexShaderOutput input) : COLOR0
 {
     return input.Color;
 }
 
+float4 DepthPS(WithShadowOutput input) : COLOR0
+{
+    // Find the position of this pixel in light space
+    float4 lightingPosition = mul(input.WorldPos, DirectionalLightMatrix);
 
-// Hardware instancing technique.
+    float2 ShadowTexCoord = 0.5 * lightingPosition.xy / lightingPosition.w + 0.5;
+    ShadowTexCoord.y = 1.0f - ShadowTexCoord.y;
+
+    // Get the current depth stored in the shadow map
+    float shadowDepth = SAMPLE_TEXTURE(ShadowMap, ShadowTexCoord).r;
+    
+    return float4(shadowDepth, 0, 0, 0);
+}
+
 TECHNIQUE(Debug, DebugVS, CommonPS);
 TECHNIQUE(Batch, BatchVS, CommonPS);
 TECHNIQUE(Instancing, InstancingVS, CommonPS);
+TECHNIQUE(InstancingDepth, InstancingWithShadowVS, DepthPS);
+TECHNIQUE(InstancingWithShadow, InstancingWithShadowVS, InstancingWithShadowPS);
+TECHNIQUE(InstancingShadowMap, InstancingShadowMapVS, ShadowMapPS);

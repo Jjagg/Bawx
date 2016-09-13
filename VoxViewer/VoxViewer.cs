@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bawx;
+using BlockWorld;
 using InputHelper;
 using MGWheels.MiniUtils;
 using Microsoft.Xna.Framework;
@@ -11,13 +13,8 @@ namespace VoxViewer
     internal class VoxViewer : Game
     {
         private readonly GraphicsDeviceManager _graphics;
-        private readonly RasterizerState _wireframeRasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace, FillMode = FillMode.WireFrame };
+        private DirectionalShadowMap _shadowMap;
 
-        private Matrix _viewMatrix;
-        private Matrix _projectionMatrix;
-        private Matrix _cameraRotationMatrix;
-
-        private float _cameraAngle = 0;
 
         private SpriteBatch _spriteBatch;
         private Texture2D _background;
@@ -25,11 +22,13 @@ namespace VoxViewer
         private SpriteFont _font;
 
         private GraphicsStateStack _deviceState;
-        private List<string> _modelNames;
-        private List<Chunk> _modelChunks;
-        private int _chunkIndex;
-        private string CurrentModelName => _modelNames[_chunkIndex];
-        private Chunk CurrentChunk => _modelChunks[_chunkIndex];
+
+        public VoxViewerState State;
+
+        private Axes _axes;
+
+        private Chunk CurrentChunk => State.CurrentChunk;
+        private VoxelEffect Effect => CurrentChunk.Renderer.Effect;
 
         public VoxViewer()
         {
@@ -41,6 +40,7 @@ namespace VoxViewer
 
             IsFixedTimeStep = false;
             _graphics.SynchronizeWithVerticalRetrace = false;
+
         }
 
         protected override void Initialize()
@@ -73,137 +73,320 @@ namespace VoxViewer
             }
             _background.SetData(gradient);
 
-            _modelNames = new List<string>();
-            _modelNames.Add("3x3x3");
-            _modelNames.Add("8x8x8");
-            _modelNames.Add("castle");
-            _modelNames.Add("chr_knight");
-            _modelNames.Add("chr_old");
-            _modelNames.Add("chr_rain");
-            _modelNames.Add("chr_sword");
-            _modelNames.Add("doom");
-            _modelNames.Add("ephtracy");
-            _modelNames.Add("menger");
-            _modelNames.Add("monu1");
-            _modelNames.Add("monu9");
-            _modelNames.Add("nature");
-            _modelNames.Add("shelf");
-            _modelNames.Add("teapot");
+            var modelNames = new List<string>();
+            modelNames.Add("3x3x3");
+            modelNames.Add("8x8x8");
+            modelNames.Add("castle");
+            modelNames.Add("chr_knight");
+            modelNames.Add("chr_old");
+            modelNames.Add("chr_rain");
+            modelNames.Add("chr_sword");
+            modelNames.Add("doom");
+            modelNames.Add("ephtracy");
+            modelNames.Add("menger");
+            modelNames.Add("monu1");
+            modelNames.Add("monu9");
+            modelNames.Add("nature");
+            modelNames.Add("shelf");
+            modelNames.Add("teapot");
 
-            _modelChunks = new List<Chunk>();
-            foreach (var model in _modelNames)
+            var modelChunks = new List<Chunk>();
+            foreach (var model in modelNames)
             {
                 var chunk = Content.Load<Chunk>(model);
-                _modelChunks.Add(chunk);
+                modelChunks.Add(chunk);
                 chunk.Position = -chunk.Center;
             }
+
+            _shadowMap = new DirectionalShadowMap(GraphicsDevice);
+            _axes = new Axes(GraphicsDevice)
+            {
+                ScreenPos = new Vector2(1800, 100),
+            };
+
+            State = new VoxViewerState(this, modelNames, modelChunks);
         }
 
         protected override void Update(GameTime gameTime)
         {
             HandleInput();
 
-            _cameraAngle += 25f * (float) gameTime.ElapsedGameTime.TotalSeconds;
-            _cameraRotationMatrix = Matrix.CreateTranslation(CurrentChunk.Center + new Vector3(0, 0, CurrentChunk.SizeZ + 100))*
-                                    Matrix.CreateRotationX(-MathHelper.Pi/12f)*
-                                    Matrix.CreateRotationY(MathHelper.ToRadians(_cameraAngle));
+            State.Update(gameTime);
 
-            _viewMatrix = Matrix.CreateLookAt(_cameraRotationMatrix.Translation, CurrentChunk.Center, Vector3.Up);
-            _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _graphics.GraphicsDevice.Viewport.AspectRatio, 1, CurrentChunk.SizeZ*2 + 120);
+            _axes.Update(State.ViewMatrix);
 
-            CurrentChunk.Renderer.Effect.View = _viewMatrix;
-            CurrentChunk.Renderer.Effect.Projection = _projectionMatrix;
+            Effect.View = State.ViewMatrix;
+            Effect.Projection = State.ProjectionMatrix;
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            if (State.RenderState != RenderState.NoShadowMap)
+                UpdateShadowMap();
+
             GraphicsDevice.Clear(Color.LightGray);
-
             _deviceState.Push();
-
-            // Render the background
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.Draw(_background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
-            _spriteBatch.End();
+            RenderBackGround();
             _deviceState.Pop();
 
-            // Render the active model
-            CurrentChunk.Draw();
+            switch (State.RenderState)
+            {
+                case RenderState.Normal:
+                    Effect.CurrentTechnique = Effect.InstancingWithShadowTechnique;
+                    RenderModel();
+
+                    RenderShadowMap(new Rectangle(1920-320, 0, 320, 180));
+                    break;
+                case RenderState.NoShadowMap:
+                    RenderModelNoShadow();
+                    break;
+                case RenderState.Depth:
+                    Effect.CurrentTechnique = Effect.InstancingDepthTechnique;
+                    RenderModel();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             _deviceState.Push();
 
-            // Render UI
-            _spriteBatch.Begin();
-
-            var modelIndexStr = $"Index: {_chunkIndex}";
-            _spriteBatch.DrawString(_font, modelIndexStr, new Vector2(6f, GraphicsDevice.PresentationParameters.BackBufferHeight - 96), Color.Black);
-            _spriteBatch.DrawString(_font, modelIndexStr, new Vector2(5f, GraphicsDevice.PresentationParameters.BackBufferHeight - 97), Color.White);
-
-            var modelStr = $"Model: {CurrentModelName}";
-            _spriteBatch.DrawString(_font, modelStr, new Vector2(6f, GraphicsDevice.PresentationParameters.BackBufferHeight - 71), Color.Black);
-            _spriteBatch.DrawString(_font, modelStr, new Vector2(5f, GraphicsDevice.PresentationParameters.BackBufferHeight - 72), Color.White);
-
-            var voxelsStr = $"Voxels: {CurrentChunk.BlockCount}";
-            _spriteBatch.DrawString(_font, voxelsStr, new Vector2(6f, GraphicsDevice.PresentationParameters.BackBufferHeight - 46), Color.Black);
-            _spriteBatch.DrawString(_font, voxelsStr, new Vector2(5f, GraphicsDevice.PresentationParameters.BackBufferHeight - 47), Color.White);
-
-            var sizeStr = $"Size: {CurrentChunk.SizeX} x {CurrentChunk.SizeY} x {CurrentChunk.SizeZ}";
-            _spriteBatch.DrawString(_font, sizeStr, new Vector2(6f, GraphicsDevice.PresentationParameters.BackBufferHeight - 21), Color.Black);
-            _spriteBatch.DrawString(_font, sizeStr, new Vector2(5f, GraphicsDevice.PresentationParameters.BackBufferHeight - 22), Color.White);
-
-            _spriteBatch.End();
+            RenderUI();
 
             // Render components
             base.Draw(gameTime);
             _deviceState.Pop();
         }
 
+        private void UpdateShadowMap()
+        {
+            _deviceState.Push();
+
+            Effect.CurrentTechnique = Effect.InstancingShadowMapTechnique;
+
+            _shadowMap.Prepare();
+            State.CurrentChunk.Draw();
+
+            _deviceState.Pop();
+
+            GraphicsDevice.SetRenderTarget(null);
+        }
+
+        private void RenderShadowMap(Rectangle? rect = null)
+        {
+            _deviceState.Push();
+
+            _spriteBatch.Begin();
+            if (rect == null)
+                _spriteBatch.Draw(_shadowMap.RenderTarget, Vector2.Zero);
+            else
+                _spriteBatch.Draw(_shadowMap.RenderTarget, null, rect);
+
+            _spriteBatch.End();
+
+            _deviceState.Pop();
+        }
+
+        private void RenderModel()
+        {
+            _deviceState.Push();
+
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+            Effect.ShadowMap = _shadowMap.RenderTarget;
+            CurrentChunk.Draw();
+
+            _deviceState.Pop();
+        }
+
+        private void RenderModelNoShadow()
+        {
+            _deviceState.Push();
+
+            Effect.CurrentTechnique = Effect.InstancingTechnique;
+            CurrentChunk.Draw();
+
+            _deviceState.Pop();
+        }
+
+        private void RenderBackGround()
+        {
+            _deviceState.Push();
+
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _spriteBatch.Draw(_background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
+            _spriteBatch.End();
+            _deviceState.Pop();
+
+            _deviceState.Pop();
+        }
+
+        private void RenderUI()
+        {
+            _deviceState.Push();
+
+            _spriteBatch.Begin();
+
+            var h = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            var w = GraphicsDevice.PresentationParameters.BackBufferWidth;
+
+            var modelIndexStr = $"Index: {State.ChunkIndex}";
+            RenderString(modelIndexStr, new Vector2(6f, h - 96));
+
+            var modelStr = $"Model: {State.CurrentModelName}";
+            RenderString(modelStr, new Vector2(6f, h - 71));
+
+            var voxelsStr = $"Voxels: {CurrentChunk.BlockCount}";
+            RenderString(voxelsStr, new Vector2(6f, h - 46));
+
+            var sizeStr = $"Size: {CurrentChunk.SizeX} x {CurrentChunk.SizeY} x {CurrentChunk.SizeZ}";
+            RenderString(sizeStr, new Vector2(6f, h - 21));
+
+            var stateStr = $"RenderState: {State.RenderState}";
+            RenderString(stateStr, new Vector2(w - 350, h - 21));
+
+            _spriteBatch.End();
+
+            _deviceState.Pop();
+
+            _deviceState.Push();
+            _axes.Draw();
+            _deviceState.Pop();
+        }
+
+        private void RenderString(string str, Vector2 position)
+        {
+            _spriteBatch.DrawString(_font, str, position, Color.Black);
+            _spriteBatch.DrawString(_font, str, position - Vector2.One, Color.White);
+        }
+
         private void HandleInput()
         {
             if (Input.IsPressed(Keys.Escape)) Exit();
-
-            if (Input.IsPressed(Keys.Z))
-                ToggleWireframe();
-
-            if (Input.IsPressed(Keys.Left) || Input.IsPressed(Keys.A)) PreviousModel();
-            if (Input.IsPressed(Keys.Right) || Input.IsPressed(Keys.D)) NextModel();
-
-            if (Input.IsPressed(Keys.D1)) SetModel(0);
-            if (Input.IsPressed(Keys.D2)) SetModel(1);
-            if (Input.IsPressed(Keys.D3)) SetModel(2);
-            if (Input.IsPressed(Keys.D4)) SetModel(3);
-            if (Input.IsPressed(Keys.D5)) SetModel(4);
-            if (Input.IsPressed(Keys.D6)) SetModel(5);
-            if (Input.IsPressed(Keys.D7)) SetModel(6);
-            if (Input.IsPressed(Keys.D8)) SetModel(7);
-            if (Input.IsPressed(Keys.D9)) SetModel(8);
         }
 
-        private void SetModel(int index)
+        public class VoxViewerState
         {
-            var length = _modelChunks.Count;
-            _chunkIndex = (index%length + length)%length;
+            private readonly VoxViewer _voxViewer;
+
+            private readonly RasterizerState _wireframeRasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace, FillMode = FillMode.WireFrame };
+
+            public int ChunkIndex { get; private set; }
+            private int ModelCount => _modelNames.Count;
+
+            public RenderState RenderState = RenderState.Normal;
+            public CameraState CameraState = CameraState.Static;
+            public bool WireframeMode;
+
+            private float _cameraAngle;
+            public Matrix ViewMatrix { get; private set; }
+            public Matrix ProjectionMatrix { get; private set; }
+
+            private readonly List<string> _modelNames;
+            private readonly List<Chunk> _modelChunks;
+
+            public string CurrentModelName => _modelNames[ChunkIndex];
+            public Chunk CurrentChunk => _modelChunks[ChunkIndex];
+
+            private GraphicsDevice GraphicsDevice => _voxViewer.GraphicsDevice;
+
+            public VoxViewerState(VoxViewer voxViewer, List<string> modelNames, List<Chunk> modelChunks)
+            {
+                _voxViewer = voxViewer;
+                _modelNames = modelNames;
+                _modelChunks = modelChunks;
+                RecomputeProjection();
+            }
+
+            public void Update(GameTime gameTime)
+            {
+                HandleInput();
+
+                UpdateCameraState(gameTime);
+            }
+
+            public void HandleInput()
+            {
+                if (Input.IsPressed(Keys.Left) || Input.IsPressed(Keys.A)) SetModel(ChunkIndex -1);
+                if (Input.IsPressed(Keys.Right) || Input.IsPressed(Keys.D)) SetModel(ChunkIndex + 1);
+
+                if (Input.IsPressed(Keys.D1)) SetModel(0);
+                if (Input.IsPressed(Keys.D2)) SetModel(1);
+                if (Input.IsPressed(Keys.D3)) SetModel(2);
+                if (Input.IsPressed(Keys.D4)) SetModel(3);
+                if (Input.IsPressed(Keys.D5)) SetModel(4);
+                if (Input.IsPressed(Keys.D6)) SetModel(5);
+                if (Input.IsPressed(Keys.D7)) SetModel(6);
+                if (Input.IsPressed(Keys.D8)) SetModel(7);
+                if (Input.IsPressed(Keys.D9)) SetModel(8);
+
+                if (Input.IsPressed(Keys.Up))
+                    RenderState = (RenderState) ((int) (RenderState + 1)%RenderStateCount);
+                if (Input.IsPressed(Keys.Down))
+                    RenderState = (RenderState) ((int) (RenderState - 1 + RenderStateCount)%RenderStateCount);
+
+                if (Input.IsPressed(Keys.Z)) ToggleWireframe();
+
+                if (Input.IsPressed(Keys.R)) ToggleRotation();
+            }
+
+            public void UpdateCameraState(GameTime gameTime)
+            {
+                if (CameraState == CameraState.Rotating)
+                    _cameraAngle += 0.6f*(float) gameTime.ElapsedGameTime.TotalSeconds;
+                if (CameraState == CameraState.Rotating || CameraState == CameraState.Static)
+                {
+                    var dist = CurrentChunk.SizeZ + 70;
+                    var cameraPos = CurrentChunk.Center + new Vector3(
+                        dist*(float) Math.Sin(_cameraAngle),
+                        dist/4f,
+                        dist*(float) Math.Cos(_cameraAngle));
+
+                    ViewMatrix = Matrix.CreateLookAt(cameraPos, CurrentChunk.Center, Vector3.Up);
+                }
+            }
+
+            private void ToggleWireframe()
+            {
+                WireframeMode = !WireframeMode;
+                GraphicsDevice.RasterizerState = WireframeMode ? _wireframeRasterizerState : RasterizerState.CullCounterClockwise;
+            }
+
+            private void ToggleRotation()
+            {
+                CameraState = CameraState == CameraState.Rotating ? CameraState.Static : CameraState.Rotating;
+            }
+
+            private void SetModel(int index)
+            {
+                var length = ModelCount;
+                ChunkIndex = (index%length + length)%length;
+                RecomputeProjection();
+            }
+
+            private void RecomputeProjection()
+            {
+                ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                    MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 
+                    CurrentChunk.SizeZ*2 + 100);
+            }
         }
 
-        private void NextModel()
+        private static readonly int RenderStateCount = Enum.GetValues(typeof(RenderState)).Length;
+
+        public enum RenderState
         {
-            _chunkIndex = (_chunkIndex + 1) % _modelChunks.Count;
+            Normal = 0,
+            NoShadowMap = 1,
+            Depth = 2
         }
 
-        private void PreviousModel()
+        public enum CameraState
         {
-            _chunkIndex = (_chunkIndex - 1 + _modelChunks.Count) % _modelChunks.Count;
+            Static = 0,
+            Rotating = 1,
+            Front = 2,
+            Back = 3,
         }
-
-        private void ToggleWireframe()
-        {
-            if (GraphicsDevice.RasterizerState == _wireframeRasterizerState)
-                GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
-            else
-                GraphicsDevice.RasterizerState = _wireframeRasterizerState;
-        }
-
     }
 }

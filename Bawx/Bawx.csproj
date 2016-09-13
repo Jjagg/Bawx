@@ -38,6 +38,7 @@
     <Compile Include="BawxMaterial.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="BytePosition3.cs" />
+    <Compile Include="Camera.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GraphicsStateStack.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Rendering\ChunkRenderer.cs" />
     <Compile Include="Rendering\InstancedChunkRenderer.cs" />
     <Compile Include="Rendering\PolygonChunkRenderer.cs" />
+    <Compile Include="DirectionalShadowMap.cs" />
     <Compile Include="Util\CubeBuilder.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="VoxelBuffer.cs" />
