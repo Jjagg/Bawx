@@ -46,7 +46,6 @@
     <Compile Include="ChunkCollectionWriter.cs" />
     <Compile Include="ChunkContent.cs" />
     <Compile Include="ChunkContentCollection.cs" />
-    <Compile Include="GreedyMesh.cs" />
     <Compile Include="MagicaVoxel.cs" />
     <Compile Include="VoxContent.cs" />
     <Compile Include="VoxelChunkProcessor.cs" />

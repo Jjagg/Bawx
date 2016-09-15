@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 namespace MagicaVoxLoader
 {
     [ContentProcessor(DisplayName = "Vox Processor - Chunks")]
-    public sealed class VoxelChunkProcessor : ContentProcessor<VoxContent, ChunkContentCollection>
+    public sealed class VoxelChunkProcessor : ContentProcessor<VoxContent, ChunkContent>
     {
         private ContentProcessorContext _context;
 
@@ -22,19 +22,19 @@ namespace MagicaVoxLoader
 
         private VoxContent _input;
 
-        public override ChunkContentCollection Process(VoxContent input, ContentProcessorContext context)
+        public override ChunkContent Process(VoxContent input, ContentProcessorContext context)
         {
             _context = context;
             _input = input;
 
             switch (RendererType)
             {
+                // TODO fix
+                case ChunkRendererType.Meshed:
                 case ChunkRendererType.Instanced:
                     return BuildInstanced();
                 case ChunkRendererType.Batched:
                     return BuildBatched();
-                case ChunkRendererType.Meshed:
-                    return BuildMeshed();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -42,7 +42,7 @@ namespace MagicaVoxLoader
 
         #region Instanced
 
-        private ChunkContentCollection BuildInstanced()
+        private ChunkContent BuildInstanced()
         {
             var voxels = _input.Voxels;
             // load voxels into a grid so we can easily check neighbors
@@ -68,10 +68,10 @@ namespace MagicaVoxLoader
 
             var chunk = new ChunkContent(Vector3.Zero, _input.SizeX, _input.SizeY, _input.SizeZ, 
                 actives.Concat(inactives).ToArray(), _input.Palette, actives.Count, RendererType);
-            var chunks = new ChunkContentCollection();
-            chunks.Add(chunk);
+            //var chunks = new ChunkContentCollection();
+            //chunks.Add(chunk);
 
-            return chunks;
+            return chunk;
 
         }
 
@@ -79,7 +79,7 @@ namespace MagicaVoxLoader
 
         #region Batched
 
-        private ChunkContentCollection BuildBatched()
+        private ChunkContent BuildBatched()
         {
             throw new NotImplementedException();
         }
@@ -88,9 +88,26 @@ namespace MagicaVoxLoader
 
         #region Meshed
 
-        private ChunkContentCollection BuildMeshed()
+        private ChunkContent BuildMeshed()
         {
+            var voxels = _input.Voxels;
+            var grid = BuildGrid(_input);
+
+            QuadData[] vertices;
+            int[] indices;
+            
             throw new NotImplementedException();
+        }
+
+        private IEnumerable<QuadData> CreateQuad(int x, int y, int z, Vector3 w, Vector3 h, GreedyMesh.VoxelFace voxelFace, bool backFace)
+        {
+            // normal is perpendicular to width and height, use backFace to determine sign
+            var normal = Vector3.Cross(w, h) * (backFace ? 1 : -1);
+            normal.Normalize();
+
+            return new List<QuadData>
+            {
+            };
         }
 
         #endregion

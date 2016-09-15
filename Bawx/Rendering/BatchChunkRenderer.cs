@@ -23,8 +23,9 @@ namespace Bawx.Rendering
         {
         }
 
-        protected override void InitializeInternal(BlockData[] blockData, int active, int maxBlocks)
+        protected override void InitializeInternal(Chunk chunk, int active, int maxBlocks)
         {
+            var blockData = chunk.BlockData;
             _vertexCount = blockData.Length*24;
             _indexCount = blockData.Length*36;
             _vertices = new VertexPositionNormalColor[maxBlocks*24];

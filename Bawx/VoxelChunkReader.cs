@@ -35,7 +35,7 @@ namespace Bawx
             for (var i = 0; i < 255; i++)
                 palette[i] = reader.ReadColor().ToVector4();
 
-            var renderer = new InstancedChunkRenderer(gd, palette);
+            var renderer = new PolygonChunkRenderer(gd, palette);
             var chunk = new Chunk(renderer, pos, sizeX, sizeY, sizeZ);
 
             chunk.BuildChunk(blockData, activeCount);

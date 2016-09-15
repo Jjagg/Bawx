@@ -95,7 +95,7 @@ namespace VoxViewer
             var modelChunks = new List<Chunk>();
             foreach (var model in modelNames)
             {
-                var chunk = Content.Load<ChunkCollection>(model)[0];
+                var chunk = Content.Load<Chunk>(model);
                 modelChunks.Add(chunk);
                 chunk.Position = -chunk.Center;
             }

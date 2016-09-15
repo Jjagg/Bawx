@@ -361,7 +361,7 @@ namespace Bawx.Util
 
         #region Int Indices
 
-        public static int[] GetIntIndex(int start = 0, bool copy = false)
+        public static int[] GetIndices(int start = 0, bool copy = false)
         {
             return new[]
             {
@@ -392,5 +392,18 @@ namespace Bawx.Util
         }
 
         #endregion
+
+        public static Vector3[] GetNormals()
+        {
+            return new[]
+            {
+                Vector3.UnitX,
+                -Vector3.UnitX,
+                Vector3.UnitY,
+                Vector3.UnitY,
+                -Vector3.UnitZ,
+                -Vector3.UnitZ,
+            };
+        }
     }
 }

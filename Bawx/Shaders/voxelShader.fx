@@ -38,6 +38,12 @@ struct BlockData
     uint4 OffsetIndex : POSITION1;
 };
 
+struct QuadData
+{
+    uint4 Position : POSITION0;
+    uint4 OffsetIndex : POSITION1;
+    uint4 Normal : NORMAL0;
+};
 
 struct VertexShaderOutput
 {
@@ -58,6 +64,8 @@ struct ShadowMapOutput
     float4 Position : POSITION0;
     float Depth     : TEXCOORD0;
 };
+
+float3 Normals[6];
 
 float4 Palette[255];
 
@@ -106,12 +114,12 @@ VertexShaderOutput BatchVS(BatchInput input)
     return output;
 }
 
-VertexShaderOutput InstancingVS(CubeData unitCube, BlockData blockData)
+VertexShaderOutput InstancingVS(CubeData unitCube, BlockData block)
 {
     VertexShaderOutput output;
 
     // Apply the world and camera matrices to compute the output position.
-    float4 worldPosition = float4(ChunkPosition + unitCube.Position.xyz + blockData.OffsetIndex.xyz, 1);
+    float4 worldPosition = float4(ChunkPosition + unitCube.Position.xyz + block.OffsetIndex.xyz, 1);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
 
@@ -119,7 +127,25 @@ VertexShaderOutput InstancingVS(CubeData unitCube, BlockData blockData)
     float diffuseAmount = max(-dot(unitCube.Normal, LightDirection), 0);
     float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
     
-    output.Color = float4(lightingResult, 1) * Palette[blockData.OffsetIndex.w];
+    output.Color = float4(lightingResult, 1) * Palette[block.OffsetIndex.w];
+
+    return output;
+}
+
+VertexShaderOutput MeshVS(QuadData quad)
+{
+    VertexShaderOutput output;
+
+    float3 offset = quad.OffsetIndex.xyz - 0.5;
+    float4 worldPosition = float4(ChunkPosition + offset, 1);
+    float4 viewPosition = mul(worldPosition, View);
+    output.Position = mul(viewPosition, Projection);
+
+    // Compute lighting, using a simple Lambert model.
+    float diffuseAmount = max(-dot(Normals[quad.Normal.x], LightDirection), 0);
+    float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
+
+    output.Color = float4(lightingResult, 1) * Palette[quad.OffsetIndex.w];
 
     return output;
 }
@@ -205,6 +231,7 @@ float4 DepthPS(WithShadowOutput input) : COLOR0
 TECHNIQUE(Debug, DebugVS, CommonPS);
 TECHNIQUE(Batch, BatchVS, CommonPS);
 TECHNIQUE(Instancing, InstancingVS, CommonPS);
+TECHNIQUE(Mesh, MeshVS, CommonPS);
 TECHNIQUE(InstancingDepth, InstancingWithShadowVS, DepthPS);
 TECHNIQUE(InstancingWithShadow, InstancingWithShadowVS, InstancingWithShadowPS);
 TECHNIQUE(InstancingShadowMap, InstancingShadowMapVS, ShadowMapPS);

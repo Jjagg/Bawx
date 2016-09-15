@@ -44,6 +44,7 @@ namespace Bawx
 
         public EffectTechnique BatchTechnique;
         public EffectTechnique InstancingTechnique;
+        public EffectTechnique MeshTechnique;
         public EffectTechnique InstancingDepthTechnique;
         public EffectTechnique InstancingWithShadowTechnique;
         public EffectTechnique InstancingShadowMapTechnique;
@@ -220,6 +221,7 @@ namespace Bawx
         {
             BatchTechnique = Techniques["Batch"];
             InstancingTechnique = Techniques["Instancing"];
+            MeshTechnique = Techniques["Mesh"];
             InstancingDepthTechnique = Techniques["InstancingDepth"];
             InstancingWithShadowTechnique = Techniques["InstancingWithShadow"];
             InstancingShadowMapTechnique = Techniques["InstancingShadowMap"];
@@ -236,6 +238,8 @@ namespace Bawx
             _ambientLightParam = Parameters["AmbientLight"];
 
             _shadowMapParam = Parameters["ShadowMap"];
+
+            Parameters["Normals"].SetValue(CubeBuilder.GetNormals());
         }
 
         #endregion

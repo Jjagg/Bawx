@@ -31,6 +31,8 @@ namespace Bawx
 
         public Vector3 Center => Position + new Vector3(SizeX/2, SizeY/2, SizeZ/2);
 
+        public BlockData[] BlockData;
+
         public Chunk(ChunkRenderer renderer, Vector3 position, 
             int sizeX = DefaultSize, int sizeY = DefaultSize, int sizeZ = DefaultSize)
         {
@@ -40,8 +42,6 @@ namespace Bawx
             SizeY = sizeY;
             SizeZ = sizeZ;
             TotalSize = sizeX*sizeY*sizeZ;
-
-            Renderer.Assign(this);
         }
 
         public void SetBlockData(int index, BlockData data)
@@ -78,8 +78,8 @@ namespace Bawx
             if (activeCount < 0 || activeCount > data.Length)
                 throw new ArgumentOutOfRangeException(nameof(activeCount));
 
-            var active = activeCount ?? data.Length;
-            Renderer.Initialize(data, active);
+            BlockData = data;
+            Renderer.Initialize(this, activeCount ?? data.Length);
             // TODO store the blocks in a more manageable format (octree probably)
         }
 
