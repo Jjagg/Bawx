@@ -8,31 +8,17 @@ namespace MagicaVoxLoader
     {
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
-            return "Bawx.VoxelChunkReader, Bawx";
+            return "Bawx.ChunkCollectionReader, Bawx";
         }
 
-        protected override void Write(ContentWriter output, ChunkContentCollection chunks)
+        protected override void Write(ContentWriter output, ChunkContentCollection value)
         {
-            var value = chunks.Chunks[1];
-            output.Write(value.SizeX);
-            output.Write(value.SizeY);
-            output.Write(value.SizeZ);
-            output.Write(value.Position);
-            output.Write(value.BlockCount);
-            output.Write(value.ActiveBlocks);
+            var chunkWriter = new ChunkWriter();
 
-            for (var i = 0; i < value.BlockCount; i++)
-            {
-                var b = value.Blocks[i];
-                output.Write(b.X);
-                output.Write(b.Y);
-                output.Write(b.Z);
-                output.Write(b.Index);
-            }
+            output.Write(value.Chunks.Count);
 
-            // write the palette
-            foreach (var c in value.Palette)
-                output.Write(c);
+            foreach (var chunk in value.Chunks)
+                output.WriteObject(chunk, chunkWriter);
         }
     }
 }

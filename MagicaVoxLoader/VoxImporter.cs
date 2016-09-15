@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 
 namespace MagicaVoxLoader
 {
-    [ContentImporter(".vox", DisplayName = "VOX Importer", DefaultProcessor = "VoxelSceneProcessor")]
+    [ContentImporter(".vox", DisplayName = "Vox Importer", DefaultProcessor = "VoxelSceneProcessor")]
     public class VoxImporter : ContentImporter<VoxContent>
     {
         private ContentImporterContext _context;
@@ -152,7 +152,7 @@ namespace MagicaVoxLoader
                 voxels[i].X = reader.ReadByte();
                 // Z-axis points up for MV but backwards (towards us) for MG. 
                 // So MG axes are rotated a quarter over the positive x-axis relative to MV
-                voxels[i].Z = (byte) (voxContent.SizeZ-reader.ReadByte());
+                voxels[i].Z = (byte) (voxContent.SizeZ - 1 - reader.ReadByte());
                 voxels[i].Y = reader.ReadByte();
                 voxels[i].ColorIndex = reader.ReadByte();
             }

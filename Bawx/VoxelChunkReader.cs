@@ -20,6 +20,7 @@ namespace Bawx
             var count = reader.ReadInt32();
             var activeCount = reader.ReadInt32();
             var blockData = new BlockData[count];
+            var rendererType = reader.ReadRawObject<ChunkRendererType>();
 
             for (var i = 0; i < count; i++)
             {

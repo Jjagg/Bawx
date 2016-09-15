@@ -43,12 +43,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChunkCollectionWriter.cs" />
     <Compile Include="ChunkContent.cs" />
     <Compile Include="ChunkContentCollection.cs" />
+    <Compile Include="GreedyMesh.cs" />
     <Compile Include="MagicaVoxel.cs" />
     <Compile Include="VoxContent.cs" />
-    <Compile Include="VoxChunkProcessor.cs" />
-    <Compile Include="ChunkCollectionWriter.cs" />
+    <Compile Include="VoxelChunkProcessor.cs" />
+    <Compile Include="ChunkWriter.cs" />
     <Compile Include="VoxelSceneWriter.cs" />
     <Compile Include="VoxImporter.cs" />
     <Compile Include="VoxelSceneProcessor.cs" />

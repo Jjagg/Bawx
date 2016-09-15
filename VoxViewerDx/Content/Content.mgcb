@@ -16,82 +16,82 @@
 
 #begin monu1.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:monu1.vox
 
 #begin 3x3x3.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:3x3x3.vox
 
 #begin 8x8x8.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:8x8x8.vox
 
 #begin castle.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:castle.vox
 
 #begin chr_knight.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:chr_knight.vox
 
 #begin chr_old.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:chr_old.vox
 
 #begin chr_rain.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:chr_rain.vox
 
 #begin chr_sword.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:chr_sword.vox
 
 #begin doom.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:doom.vox
 
 #begin ephtracy.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:ephtracy.vox
 
 #begin menger.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:menger.vox
 
 #begin monu9.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:monu9.vox
 
 #begin nature.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:nature.vox
 
 #begin shelf.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:shelf.vox
 
 #begin teapot.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:teapot.vox
 
 #begin littlebig.vox
 /importer:VoxImporter
-/processor:VoxChunkProcessor
+/processor:VoxelChunkProcessor
 /build:littlebig.vox
 
 #begin font.spritefont

@@ -316,40 +316,34 @@ namespace Bawx.Util
 
         #region Short Indices
 
-        private static short[] _shortIndices;
-        public static short[] GetShortIndices(bool copy = false)
+        public static short[] GetShortIndices(int start = 0, bool copy = false)
         {
-            if (_shortIndices == null)
+            return new[]
             {
-                _shortIndices = new short[]
-                {
-                    // Front
-                    0, 1, 2,
-                    2, 3, 0,
+                // Front
+                (short) (start + 0), (short) (start + 1), (short) (start + 2),
+                (short) (start + 2), (short) (start + 3), (short) (start + 0),
 
-                    // Back
-                    6, 5, 4,
-                    4, 7, 6,
+                // Back
+                (short) (start + 6), (short) (start + 5), (short) (start + 4),
+                (short) (start + 4), (short) (start + 7), (short) (start + 6),
 
-                    // Top
-                    10, 9, 8,
-                    8, 11, 10,
+                // Top
+                (short) (start + 10), (short) (start + 9), (short) (start + 8),
+                (short) (start + 8), (short) (start + 11), (short) (start + 10),
 
-                    // Bottom
-                    12, 13, 14,
-                    14, 15, 12,
+                // Bottom
+                (short) (start + 12), (short) (start + 13), (short) (start + 14),
+                (short) (start + 14), (short) (start + 15), (short) (start + 12),
 
-                    // Left
-                    18, 17, 16,
-                    16, 19, 18,
+                // Left
+                (short) (start + 18), (short) (start + 17), (short) (start + 16),
+                (short) (start + 16), (short) (start + 19), (short) (start + 18),
 
-                    // Right
-                    20, 21, 22,
-                    22, 23, 20,
-                };
-            }
-
-            return copy ? _shortIndices.Copy() : _shortIndices;
+                // Right
+                (short) (start + 20), (short) (start + 21), (short) (start + 22),
+                (short) (start + 22), (short) (start + 23), (short) (start + 20),
+            };
         }
 
         private static IndexBuffer _shortIndexBuffer;
@@ -367,40 +361,34 @@ namespace Bawx.Util
 
         #region Int Indices
 
-        private static int[] _intIndices;
-        public static int[] GetIntIndex(bool copy = false)
+        public static int[] GetIntIndex(int start = 0, bool copy = false)
         {
-            if (_intIndices == null)
+            return new[]
             {
-                _intIndices = new int[]
-                {
-                    // Front
-                    0, 1, 2,
-                    2, 3, 0,
+                // Front
+                start + 0, start + 1, start + 2,
+                start + 2, start + 3, start + 0,
 
-                    // Back
-                    6, 5, 4,
-                    4, 7, 6,
+                // Back
+                start + 6, start + 5, start + 4,
+                start + 4, start + 7, start + 6,
 
-                    // Top
-                    10, 9, 8,
-                    8, 11, 10,
+                // Top
+                start + 10, start + 9, start + 8,
+                start + 8, start + 11, start + 10,
 
-                    // Bottom
-                    12, 13, 14,
-                    14, 15, 12,
+                // Bottom
+                start + 12, start + 13, start + 14,
+                start + 14, start + 15, start + 12,
 
-                    // Left
-                    18, 17, 16,
-                    16, 19, 18,
+                // Left
+                start + 18, start + 17, start + 16,
+                start + 16, start + 19, start + 18,
 
-                    // Right
-                    20, 21, 22,
-                    22, 23, 20,
-                };
-            }
-
-            return copy ? _intIndices.Copy() : _intIndices;
+                // Right
+                start + 20, start + 21, start + 22,
+                start + 22, start + 23, start + 20,
+            };
         }
 
         #endregion

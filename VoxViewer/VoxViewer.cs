@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Bawx;
+using Bawx.Rendering;
 using BlockWorld;
 using InputHelper;
 using MGWheels.MiniUtils;
@@ -15,7 +16,6 @@ namespace VoxViewer
         private readonly GraphicsDeviceManager _graphics;
         private DirectionalShadowMap _shadowMap;
 
-
         private SpriteBatch _spriteBatch;
         private Texture2D _background;
 
@@ -29,6 +29,8 @@ namespace VoxViewer
 
         private Chunk CurrentChunk => State.CurrentChunk;
         private VoxelEffect Effect => CurrentChunk.Renderer.Effect;
+
+        private GraphicsMetrics _drawMetrics;
 
         public VoxViewer()
         {
@@ -93,7 +95,7 @@ namespace VoxViewer
             var modelChunks = new List<Chunk>();
             foreach (var model in modelNames)
             {
-                var chunk = Content.Load<Chunk>(model);
+                var chunk = Content.Load<ChunkCollection>(model)[0];
                 modelChunks.Add(chunk);
                 chunk.Position = -chunk.Center;
             }
@@ -123,7 +125,7 @@ namespace VoxViewer
 
         protected override void Draw(GameTime gameTime)
         {
-            if (State.RenderState != RenderState.NoShadowMap)
+            if (State.RenderState == RenderState.ShadowMap)
                 UpdateShadowMap();
 
             GraphicsDevice.Clear(Color.LightGray);
@@ -131,15 +133,17 @@ namespace VoxViewer
             RenderBackGround();
             _deviceState.Pop();
 
+            _drawMetrics = GraphicsDevice.Metrics;
+
             switch (State.RenderState)
             {
-                case RenderState.Normal:
+                case RenderState.ShadowMap:
                     Effect.CurrentTechnique = Effect.InstancingWithShadowTechnique;
                     RenderModel();
 
                     RenderShadowMap(new Rectangle(1920-320, 0, 320, 180));
                     break;
-                case RenderState.NoShadowMap:
+                case RenderState.Simple:
                     RenderModelNoShadow();
                     break;
                 case RenderState.Depth:
@@ -149,6 +153,8 @@ namespace VoxViewer
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            _drawMetrics = GraphicsDevice.Metrics - _drawMetrics;
 
             _deviceState.Push();
 
@@ -230,6 +236,16 @@ namespace VoxViewer
             var h = GraphicsDevice.PresentationParameters.BackBufferHeight;
             var w = GraphicsDevice.PresentationParameters.BackBufferWidth;
 
+            var instanceRenderer = CurrentChunk.Renderer as InstancedChunkRenderer;
+            if (instanceRenderer != null)
+            {
+                var activeStr = $"Active voxels: {instanceRenderer.ActiveCount}";
+                RenderString(activeStr, new Vector2(6f, h-146));
+            }
+
+            var primitivesStr = $"Total primitives: {_drawMetrics.PrimitiveCount}";
+            RenderString(primitivesStr, new Vector2(6f, h - 121));
+
             var modelIndexStr = $"Index: {State.ChunkIndex}";
             RenderString(modelIndexStr, new Vector2(6f, h - 96));
 
@@ -274,7 +290,7 @@ namespace VoxViewer
             public int ChunkIndex { get; private set; }
             private int ModelCount => _modelNames.Count;
 
-            public RenderState RenderState = RenderState.Normal;
+            public RenderState RenderState = RenderState.Simple;
             public CameraState CameraState = CameraState.Static;
             public bool WireframeMode;
 
@@ -376,8 +392,9 @@ namespace VoxViewer
 
         public enum RenderState
         {
-            Normal = 0,
-            NoShadowMap = 1,
+            Simple = 0,
+            ShadowMap = 1,
+            // todo broken because of light direction hack to get shadow map working... need to fix this
             Depth = 2
         }
 

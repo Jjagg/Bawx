@@ -13,7 +13,7 @@ namespace Bawx.Rendering
     public class BatchChunkRenderer : ChunkRenderer
     {
         private VertexPositionNormalColor[] _vertices;
-        private short[] _indices;
+        private int[] _indices;
         private int _vertexCount;
         private int _indexCount;
 
@@ -28,16 +28,15 @@ namespace Bawx.Rendering
             _vertexCount = blockData.Length*24;
             _indexCount = blockData.Length*36;
             _vertices = new VertexPositionNormalColor[maxBlocks*24];
-            _indices = new short[maxBlocks * 36];
+            _indices = new int[maxBlocks * 36];
 
-            var inds = CubeBuilder.GetShortIndices();
 
             for (var i = 0; i < blockData.Length; i++)
             {
                 var d = blockData[i];
                 // lots of garbage here maybe modfiy CubeBuilder to insert values into the array
                 var v = CubeBuilder.GetNormalColor(d.Position, new Color(Effect.Palette[d.Index]));
-
+                var inds = CubeBuilder.GetIndices(i * 24);
                 Array.Copy(v, 0, _vertices, i * v.Length, v.Length);
                 Array.Copy(inds, 0, _indices, i * inds.Length, inds.Length);
             }
