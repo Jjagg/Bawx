@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx
+namespace Bawx.VertexTypes
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 8)]
     public struct QuadData : IVertexType

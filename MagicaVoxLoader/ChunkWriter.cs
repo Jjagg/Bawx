@@ -8,7 +8,7 @@ namespace MagicaVoxLoader
     {
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
-            return "Bawx.VoxelChunkReader, Bawx";
+            return "Bawx.TypeReaders.ChunkReader, Bawx";
         }
 
         protected override void Write(ContentWriter output, ChunkContent value)

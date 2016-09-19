@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 
 namespace MagicaVoxLoader
 {
-    [ContentImporter(".vox", DisplayName = "Vox Importer", DefaultProcessor = "VoxelChunkProcessor")]
+    [ContentImporter(".vox", DisplayName = "Vox Importer", DefaultProcessor = "ChunkProcessor")]
     public class VoxImporter : ContentImporter<VoxContent>
     {
         private ContentImporterContext _context;

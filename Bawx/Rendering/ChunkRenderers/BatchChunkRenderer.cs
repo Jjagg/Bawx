@@ -1,9 +1,10 @@
 ﻿using System;
 using Bawx.Util;
+using Bawx.VertexTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx.Rendering
+namespace Bawx.Rendering.ChunkRenderers
 {
     /// <summary>
     /// Keep blocks of a chunk in an array to batch them in a single draw call.

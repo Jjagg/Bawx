@@ -1,5 +1,7 @@
 ﻿using System;
 using Bawx.Rendering;
+using Bawx.Rendering.ChunkRenderers;
+using Bawx.VertexTypes;
 using Microsoft.Xna.Framework;
 
 namespace Bawx

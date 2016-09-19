@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx
+namespace Bawx.Rendering.Effects
 {
     public class VoxelEffect : Effect
     {

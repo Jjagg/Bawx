@@ -1,4 +1,4 @@
-﻿namespace Bawx.Rendering
+﻿namespace Bawx.Rendering.ChunkRenderers
 {
     public enum ChunkRendererType
     {

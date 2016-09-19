@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx
+namespace Bawx.VertexTypes
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexPositionNormalColor : IVertexType

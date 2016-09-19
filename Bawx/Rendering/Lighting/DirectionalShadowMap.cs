@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx
+namespace Bawx.Rendering.Lighting
 {
     public class DirectionalShadowMap
     {

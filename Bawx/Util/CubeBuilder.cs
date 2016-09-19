@@ -1,6 +1,7 @@
 ﻿// Code taken or based from BoxHelpers class in the MonoGame test framework
 
 using System;
+using Bawx.VertexTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

@@ -48,7 +48,7 @@
     <Compile Include="ChunkContentCollection.cs" />
     <Compile Include="MagicaVoxel.cs" />
     <Compile Include="VoxContent.cs" />
-    <Compile Include="VoxelChunkProcessor.cs" />
+    <Compile Include="ChunkProcessor.cs" />
     <Compile Include="ChunkWriter.cs" />
     <Compile Include="VoxImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

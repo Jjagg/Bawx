@@ -30,7 +30,7 @@ namespace Bawx
 
         public static byte[] LoadShaderBytes(string name)
         {
-            var fullname = "Bawx.Shaders." + name + ShaderExtension;
+            var fullname = "Bawx.Assets.Shaders." + name + ShaderExtension;
             var stream = typeof(EffectHelper).Assembly.GetManifestResourceStream(fullname);
             if (stream == null) throw new ArgumentException($"Cannot find effect with name {name}", nameof(name));
 

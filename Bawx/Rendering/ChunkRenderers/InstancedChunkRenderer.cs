@@ -1,8 +1,9 @@
 ﻿using Bawx.Util;
+using Bawx.VertexTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx.Rendering
+namespace Bawx.Rendering.ChunkRenderers
 {
     public class InstancedChunkRenderer : ChunkRenderer
     {

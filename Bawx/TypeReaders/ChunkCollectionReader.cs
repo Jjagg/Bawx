@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 
-namespace Bawx
+namespace Bawx.TypeReaders
 {
     public class ChunkCollectionReader : ContentTypeReader<ChunkCollection>
     {

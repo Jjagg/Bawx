@@ -1,11 +1,12 @@
-﻿using Bawx.Rendering;
+﻿using Bawx.Rendering.ChunkRenderers;
+using Bawx.VertexTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx
+namespace Bawx.TypeReaders
 {
-    public class VoxelChunkReader : ContentTypeReader<Chunk>
+    public class ChunkReader : ContentTypeReader<Chunk>
     {
         protected override Chunk Read(ContentReader reader, Chunk existingInstance)
         {
