@@ -19,6 +19,10 @@
 
 #endif
 
+#if OPENGL
+    #define SV_POSITION POSITION
+#endif
+
 struct BatchInput
 {
     float4 Position : POSITION0;
@@ -40,8 +44,7 @@ struct BlockData
 
 struct QuadData
 {
-    uint4 Position : POSITION0;
-    uint4 OffsetIndex : POSITION1;
+    uint4 OffsetIndex : POSITION;
     uint4 Normal : NORMAL0;
 };
 
@@ -136,13 +139,19 @@ VertexShaderOutput MeshVS(QuadData quad)
 {
     VertexShaderOutput output;
 
-    float3 offset = quad.OffsetIndex.xyz - 0.5;
-    float4 worldPosition = float4(ChunkPosition + offset, 1);
+    float3 normal = Normals[quad.Normal.x];
+    /*int dir = (int)((quad.Normal.x + 1) / 2) - 1;
+    // offset in direction of normal should be 0.5*sign(normal), others should be -0.5
+    float offset[3] = { -0.5, -0.5, -0.5 };
+    offset[dir] = 0.5 * dot(sign(normal), float3(1,1,1));*/
+    // quads are rendered at the center of the blocks, so we need to offset them along their normals by half the size of a voxel
+    float3 pos = quad.OffsetIndex.xyz;
+    float4 worldPosition = float4(ChunkPosition + pos, 1);
     float4 viewPosition = mul(worldPosition, View);
     output.Position = mul(viewPosition, Projection);
 
     // Compute lighting, using a simple Lambert model.
-    float diffuseAmount = max(-dot(Normals[quad.Normal.x], LightDirection), 0);
+    float diffuseAmount = max(-dot(normal, LightDirection), 0);
     float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
 
     output.Color = float4(lightingResult, 1) * Palette[quad.OffsetIndex.w];

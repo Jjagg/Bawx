@@ -74,7 +74,7 @@ namespace Bawx.Rendering
             if (Initialized)
                 Dispose();
 
-            InitializeInternal(chunk, active, maxBlocks ?? chunk.BlockCount);
+            InitializeInternal(chunk, active, maxBlocks ?? chunk.BlockData.Length);
             _currentIndex += chunk.BlockCount;
             Initialized = true;
         }

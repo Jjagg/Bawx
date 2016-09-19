@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-using Bawx.Util;
+﻿using Bawx.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,37 +6,6 @@ namespace Bawx
 {
     public class VoxelEffect : Effect
     {
-
-        #region DX or OpenGL
-
-        private static int GetShaderProfile() {
-            // use reflection to figure out if Shader.Profile is OpenGL (0) or DirectX (1)
-            var mgAssembly = Assembly.GetAssembly(typeof(Game));
-            var shaderType = mgAssembly.GetType("Microsoft.Xna.Framework.Graphics.Shader");
-            var profileProperty = shaderType.GetProperty("Profile");
-            return (int) profileProperty.GetValue(null);
-        }
-
-        public static readonly int ShaderProfile;
-
-        static VoxelEffect()
-        {
-            ShaderProfile = GetShaderProfile();
-            ShaderExtension = IsUsingDx ? ".dx11" : ".ogl";
-        }
-
-        private static bool IsUsingDx => ShaderProfile == 1;
-        private static readonly string ShaderExtension;
-
-        private static byte[] LoadShaderBytes(string name) {
-            var stream = typeof(VoxelEffect).Assembly.GetManifestResourceStream(name);
-            using (var ms = new MemoryStream()) {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
-
-        #endregion
 
         #region Techniques
 
@@ -150,7 +117,7 @@ namespace Bawx
 
         private bool _lightDirty = true;
 
-        private Vector3 _lightDirection = Vector3.Normalize(new Vector3(-1f, -0.8f, -0.6f));
+        private Vector3 _lightDirection = Vector3.Normalize(new Vector3(-1f, -0.6f, -0.4f));
         public Vector3 LightDirection
         {
             get { return _lightDirection; }
@@ -165,7 +132,7 @@ namespace Bawx
             }
         }
 
-        private Vector3 _diffuseLight = new Vector3(0.75f);
+        private Vector3 _diffuseLight = new Vector3(0.65f);
         public Vector3 DiffuseLight
         {
             get { return _diffuseLight; }
@@ -217,7 +184,8 @@ namespace Bawx
 
         #region ctor
 
-        public VoxelEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, LoadShaderBytes($"Bawx.Shaders.voxelShader{ShaderExtension}.mgfxo"))
+        public VoxelEffect(GraphicsDevice graphicsDevice) 
+            : base(graphicsDevice, EffectHelper.LoadShaderBytes("voxelShader"))
         {
             BatchTechnique = Techniques["Batch"];
             InstancingTechnique = Techniques["Instancing"];

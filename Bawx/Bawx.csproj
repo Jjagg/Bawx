@@ -35,13 +35,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BawxMaterial.cs" />
-    <Compile Include="Block.cs" />
-    <Compile Include="BytePosition3.cs" />
-    <Compile Include="Camera.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="ChunkCollection.cs" />
     <Compile Include="ChunkCollectionReader.cs" />
+    <Compile Include="EffectHelper.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GraphicsStateStack.cs" />
     <Compile Include="GreedyMesh.cs" />
@@ -57,14 +54,12 @@
     <Compile Include="DirectionalShadowMap.cs" />
     <Compile Include="Util\CubeBuilder.cs" />
     <Compile Include="Util\Extensions.cs" />
-    <Compile Include="VoxelBuffer.cs" />
     <Compile Include="BlockData.cs" />
     <Compile Include="VertexPositionNormal.cs" />
     <Compile Include="VertexPositionNormalColor.cs" />
     <Compile Include="VoxelChunkReader.cs" />
-    <Compile Include="VoxelData.cs" />
     <Compile Include="VoxelEffect.cs" />
-    <Compile Include="VoxelScene.cs" />
+    <Compile Include="VoxelTracerEffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Source\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
@@ -77,6 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Shaders\voxelShader.ogl.mgfxo" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Shaders\voxelTracer.dx11.mgfxo" />
+    <EmbeddedResource Include="Shaders\voxelTracer.ogl.mgfxo" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

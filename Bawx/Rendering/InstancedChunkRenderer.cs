@@ -50,6 +50,7 @@ namespace Bawx.Rendering
 
         protected override void PreDraw()
         {
+            Effect.CurrentTechnique = Effect.InstancingTechnique;
         }
 
         protected override void DrawInternal()

@@ -27,7 +27,7 @@ namespace Bawx
 
         public readonly int TotalSize;
 
-        public int BlockCount => Renderer.BlockCount;
+        public int BlockCount { get; private set; }
 
         public Vector3 Center => Position + new Vector3(SizeX/2, SizeY/2, SizeZ/2);
 
@@ -80,7 +80,8 @@ namespace Bawx
 
             BlockData = data;
             Renderer.Initialize(this, activeCount ?? data.Length);
-            // TODO store the blocks in a more manageable format (octree probably)
+            BlockCount = data.Length;
+            // TODO store the blocks in a more manageable format (octree probably) for physics!
         }
 
         public void Draw()

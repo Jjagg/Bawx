@@ -6,7 +6,7 @@ namespace Bawx.Rendering
 {
     public class PolygonChunkRenderer : ChunkRenderer
     {
-        public override int FreeBlocks { get; }
+        public override int FreeBlocks => 0;
 
         private QuadData[] _vertices;
         private int[] _indices;
@@ -24,18 +24,19 @@ namespace Bawx.Rendering
             GreedyMesh.Generate(grid, CreateQuad, out _vertices, out _indices);
         }
 
-        private IEnumerable<QuadData> CreateQuad(int[] p, int[] du, int[] dv, int normal, GreedyMesh.VoxelFace voxelFace, bool backFace)
+        private IEnumerable<QuadData> CreateQuad(int[] p, int[] du, int[] dv, int normal, bool normalPos, GreedyMesh.VoxelFace voxelFace, bool backFace)
         {
             // normal is perpendicular to width and height
-            var norm = DirectionToFace(normal, backFace);
+            var norm = DirectionToFace(normal, normalPos);
+            var index = (byte) (voxelFace.Index - 1);
 
             // TODO -0.5 in world space before rendering in shader
             return new []
             {
-                new QuadData((byte) p[0], (byte) p[1], (byte) p[2], voxelFace.Index, norm),
-                new QuadData((byte) (p[0] + du[0]), (byte) (p[1] + du[1]), (byte) (p[2] + du[2]), voxelFace.Index, norm),
-                new QuadData((byte) (p[0] + du[0] + dv[1]), (byte) (p[1] + du[1] + dv[1]), (byte) (p[2] + du[2] + dv[2]), voxelFace.Index, norm),
-                new QuadData((byte) (p[0] + dv[0]), (byte) (p[1] + dv[1]), (byte) (p[2] + dv[2]), voxelFace.Index, norm),
+                new QuadData((byte) p[0], (byte) p[1], (byte) p[2], index, norm),
+                new QuadData((byte) (p[0] + du[0]), (byte) (p[1] + du[1]), (byte) (p[2] + du[2]), index, norm),
+                new QuadData((byte) (p[0] + du[0] + dv[0]), (byte) (p[1] + du[1] + dv[1]), (byte) (p[2] + du[2] + dv[2]), index, norm),
+                new QuadData((byte) (p[0] + dv[0]), (byte) (p[1] + dv[1]), (byte) (p[2] + dv[2]), index, norm),
             };
         }
 
@@ -57,8 +58,9 @@ namespace Bawx.Rendering
                 }
             }
 
+	    // Index is zero-based, but GreedyMesh expects index 0 only for empty voxels!
             foreach (var block in chunk.BlockData)
-                grid[block.X][block.Y][block.Z] = block.Index;
+                grid[block.X][block.Y][block.Z] = (byte) (block.Index + 1);
 
             return grid;
         }
@@ -80,11 +82,15 @@ namespace Bawx.Rendering
             throw new System.NotImplementedException();
         }
 
-        protected override void DrawInternal()
+        protected override void PreDraw()
         {
             Effect.CurrentTechnique = Effect.MeshTechnique;
+        }
+
+        protected override void DrawInternal()
+        {
             GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _vertices, 
-                0, _vertices.Length, _indices, 0, _indices.Length / 3);
+                0, _vertices.Length, _indices, 0, _indices.Length / 3, QuadData.VertexDeclaration);
         }
 
         protected override void Dispose(bool disposing)

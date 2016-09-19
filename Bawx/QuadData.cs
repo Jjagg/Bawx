@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bawx
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 8)]
     public struct QuadData : IVertexType
     {
         public byte X;
@@ -13,12 +13,6 @@ namespace Bawx
         public byte Index;
 
         public byte Normal;
-        public byte tmp1;
-        public byte tmp2;
-        public byte tmp3;
-
-        //public Vector4 Pos;
-
 
         public static readonly VertexDeclaration VertexDeclaration;
 
@@ -29,8 +23,6 @@ namespace Bawx
             Z = z;
             Index = index;
             Normal = normal;
-            tmp1 = tmp2 = tmp3 = 0;
-            //Pos = Vector4.One;
         }
 
         public QuadData(byte[] bytes, byte normal)
@@ -40,8 +32,6 @@ namespace Bawx
             Z = bytes[2];
             Index = bytes[3];
             Normal = normal;
-            tmp1 = tmp2 = tmp3 = 0;
-            //Pos = Vector4.One;
         }
 
         public Vector3 Position
@@ -101,10 +91,9 @@ namespace Bawx
         {
             var elements = new [] 
             { 
-                new VertexElement(0, VertexElementFormat.Byte4, VertexElementUsage.Position, 1),
+                new VertexElement(0, VertexElementFormat.Byte4, VertexElementUsage.Position, 0),
                 // TODO extra lighting data goes here, only the first byte is taken by normal
                 new VertexElement(4, VertexElementFormat.Byte4, VertexElementUsage.Normal, 0), 
-                //new VertexElement(8, VertexElementFormat.Vector4, VertexElementUsage.Position, 0),
             };
             VertexDeclaration = new VertexDeclaration(elements);
         }

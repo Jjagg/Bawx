@@ -50,9 +50,7 @@
     <Compile Include="VoxContent.cs" />
     <Compile Include="VoxelChunkProcessor.cs" />
     <Compile Include="ChunkWriter.cs" />
-    <Compile Include="VoxelSceneWriter.cs" />
     <Compile Include="VoxImporter.cs" />
-    <Compile Include="VoxelSceneProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

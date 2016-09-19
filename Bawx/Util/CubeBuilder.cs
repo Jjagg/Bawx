@@ -400,8 +400,8 @@ namespace Bawx.Util
                 Vector3.UnitX,
                 -Vector3.UnitX,
                 Vector3.UnitY,
-                Vector3.UnitY,
-                -Vector3.UnitZ,
+                -Vector3.UnitY,
+                Vector3.UnitZ,
                 -Vector3.UnitZ,
             };
         }

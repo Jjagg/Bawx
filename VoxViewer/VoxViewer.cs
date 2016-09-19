@@ -95,7 +95,7 @@ namespace VoxViewer
             var modelChunks = new List<Chunk>();
             foreach (var model in modelNames)
             {
-                var chunk = Content.Load<Chunk>(model);
+                var chunk = Content.Load<Chunk>(model); 
                 modelChunks.Add(chunk);
                 chunk.Position = -chunk.Center;
             }
@@ -138,7 +138,6 @@ namespace VoxViewer
             switch (State.RenderState)
             {
                 case RenderState.ShadowMap:
-                    Effect.CurrentTechnique = Effect.InstancingWithShadowTechnique;
                     RenderModel();
 
                     RenderShadowMap(new Rectangle(1920-320, 0, 320, 180));
@@ -147,7 +146,6 @@ namespace VoxViewer
                     RenderModelNoShadow();
                     break;
                 case RenderState.Depth:
-                    Effect.CurrentTechnique = Effect.InstancingDepthTechnique;
                     RenderModel();
                     break;
                 default:
@@ -168,8 +166,6 @@ namespace VoxViewer
         private void UpdateShadowMap()
         {
             _deviceState.Push();
-
-            Effect.CurrentTechnique = Effect.InstancingShadowMapTechnique;
 
             _shadowMap.Prepare();
             State.CurrentChunk.Draw();
@@ -209,7 +205,6 @@ namespace VoxViewer
         {
             _deviceState.Push();
 
-            Effect.CurrentTechnique = Effect.InstancingTechnique;
             CurrentChunk.Draw();
 
             _deviceState.Pop();
@@ -285,7 +280,7 @@ namespace VoxViewer
         {
             private readonly VoxViewer _voxViewer;
 
-            private readonly RasterizerState _wireframeRasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace, FillMode = FillMode.WireFrame };
+            private readonly RasterizerState _wireframeRasterizerState = new RasterizerState { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.WireFrame };
 
             public int ChunkIndex { get; private set; }
             private int ModelCount => _modelNames.Count;
@@ -365,7 +360,8 @@ namespace VoxViewer
             private void ToggleWireframe()
             {
                 WireframeMode = !WireframeMode;
-                GraphicsDevice.RasterizerState = WireframeMode ? _wireframeRasterizerState : RasterizerState.CullCounterClockwise;
+                // TODO culling
+                GraphicsDevice.RasterizerState = WireframeMode ? _wireframeRasterizerState : RasterizerState.CullNone;
             }
 
             private void ToggleRotation()
