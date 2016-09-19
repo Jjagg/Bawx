@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bawx.VoxelData;
 using Microsoft.Xna.Framework.Content;
 
 namespace Bawx.TypeReaders

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Bawx.Util;
 using Microsoft.Xna.Framework;
 
-namespace Bawx
+namespace Bawx.VoxelData
 {
     /// <summary>
     ///     An octree implementation where objects must have a bounding box.

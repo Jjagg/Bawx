@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Bawx
+namespace Bawx.VoxelData
 {
     internal interface IBounded
     {

@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Bawx.Rendering.Effects;
 using Bawx.VertexTypes;
+using Bawx.VoxelData;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bawx
+namespace Bawx.Util
 {
     public static class GreedyMesh
     {

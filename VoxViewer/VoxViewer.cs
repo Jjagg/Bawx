@@ -6,6 +6,7 @@ using Bawx.Rendering.ChunkRenderers;
 using Bawx.Rendering.Effects;
 using Bawx.Rendering.Lighting;
 using Bawx.Util;
+using Bawx.VoxelData;
 using BlockWorld;
 using InputHelper;
 using MGWheels.MiniUtils;

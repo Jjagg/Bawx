@@ -1,5 +1,6 @@
 ﻿using Bawx.Rendering.ChunkRenderers;
 using Bawx.VertexTypes;
+using Bawx.VoxelData;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

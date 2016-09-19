@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Bawx
+namespace Bawx.VoxelData
 {
     public class ChunkCollection
     {

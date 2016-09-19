@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 
-namespace Bawx
+namespace Bawx.Rendering.Effects
 {
     public static class EffectHelper
     {

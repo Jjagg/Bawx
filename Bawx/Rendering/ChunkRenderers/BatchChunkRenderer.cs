@@ -1,6 +1,7 @@
 ﻿using System;
 using Bawx.Util;
 using Bawx.VertexTypes;
+using Bawx.VoxelData;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

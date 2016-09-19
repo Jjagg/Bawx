@@ -15,8 +15,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VoxViewer", "VoxViewer\VoxV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.WindowsGL", "..\..\..\..\Source\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj", "{6D75E618-19CA-4C51-9546-F10965FBC0B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renderables", "Renderables\Renderables.csproj", "{ACAE1298-41A5-433E-967D-E35347C1B8F8}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		VoxViewer\VoxViewer.projitems*{85be2207-6231-4e8e-94bf-4c9b5e869030}*SharedItemsImports = 4
@@ -69,14 +67,6 @@ Global
 		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|x86.ActiveCfg = Release|x86
 		{6D75E618-19CA-4C51-9546-F10965FBC0B8}.Release|x86.Build.0 = Release|x86
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Debug|x86.Build.0 = Debug|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Release|x86.ActiveCfg = Release|Any CPU
-		{ACAE1298-41A5-433E-967D-E35347C1B8F8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
