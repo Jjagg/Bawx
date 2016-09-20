@@ -21,7 +21,7 @@ namespace Bawx.TypeReaders
 
             var count = reader.ReadInt32();
             var activeCount = reader.ReadInt32();
-            var blockData = new BlockData[count];
+            var blockData = new Block[count];
             var rendererType = reader.ReadRawObject<ChunkRendererType>();
 
             for (var i = 0; i < count; i++)
@@ -30,7 +30,7 @@ namespace Bawx.TypeReaders
                 var y = reader.ReadByte();
                 var z = reader.ReadByte();
                 var index = reader.ReadByte();
-                blockData[i] = new BlockData(x, y, z, index);
+                blockData[i] = new Block(x, y, z, index);
             }
 
             var palette = new Vector4[255];

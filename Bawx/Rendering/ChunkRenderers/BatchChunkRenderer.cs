@@ -27,7 +27,7 @@ namespace Bawx.Rendering.ChunkRenderers
 
         protected override void InitializeInternal(Chunk chunk, int active, int maxBlocks)
         {
-            var blockData = chunk.BlockData;
+            var blockData = chunk.TmpBlocks;
             _vertexCount = blockData.Length*24;
             _indexCount = blockData.Length*36;
             _vertices = new VertexPositionNormalColor[maxBlocks*24];
@@ -45,7 +45,7 @@ namespace Bawx.Rendering.ChunkRenderers
             }
         }
 
-        public override void SetBlock(BlockData block, int index)
+        public override void SetBlock(Block block, int index)
         {
             throw new NotImplementedException();
         }

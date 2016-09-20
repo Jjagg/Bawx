@@ -31,15 +31,14 @@ namespace Bawx.Rendering.ChunkRenderers
         {
             // normal is perpendicular to width and height
             var norm = DirectionToFace(normal, normalPos);
-            var index = (byte) (voxelFace.Index - 1);
 
             // TODO -0.5 in world space before rendering in shader
             return new []
             {
-                new QuadData((byte) p[0], (byte) p[1], (byte) p[2], index, norm),
-                new QuadData((byte) (p[0] + du[0]), (byte) (p[1] + du[1]), (byte) (p[2] + du[2]), index, norm),
-                new QuadData((byte) (p[0] + du[0] + dv[0]), (byte) (p[1] + du[1] + dv[1]), (byte) (p[2] + du[2] + dv[2]), index, norm),
-                new QuadData((byte) (p[0] + dv[0]), (byte) (p[1] + dv[1]), (byte) (p[2] + dv[2]), index, norm),
+                new QuadData((byte) p[0], (byte) p[1], (byte) p[2], voxelFace.Index, norm),
+                new QuadData((byte) (p[0] + du[0]), (byte) (p[1] + du[1]), (byte) (p[2] + du[2]), voxelFace.Index, norm),
+                new QuadData((byte) (p[0] + du[0] + dv[0]), (byte) (p[1] + du[1] + dv[1]), (byte) (p[2] + du[2] + dv[2]), voxelFace.Index, norm),
+                new QuadData((byte) (p[0] + dv[0]), (byte) (p[1] + dv[1]), (byte) (p[2] + dv[2]), voxelFace.Index, norm),
             };
         }
 
@@ -61,16 +60,15 @@ namespace Bawx.Rendering.ChunkRenderers
                 }
             }
 
-	    // Index is zero-based, but GreedyMesh expects index 0 only for empty voxels!
-            foreach (var block in chunk.BlockData)
-                grid[block.X][block.Y][block.Z] = (byte) (block.Index + 1);
+            foreach (var block in chunk.TmpBlocks)
+                grid[block.X][block.Y][block.Z] = block.Index;
 
             return grid;
         }
 
         #endregion
 
-        public override void SetBlock(BlockData block, int index)
+        public override void SetBlock(Block block, int index)
         {
             throw new System.NotImplementedException();
         }

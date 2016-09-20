@@ -50,8 +50,8 @@ namespace MagicaVoxLoader
             // load voxels into a grid so we can easily check neighbors
             var grid = BuildGrid(_input);
 
-            var actives = new List<BlockData>();
-            var inactives = new List<BlockData>();
+            var actives = new List<Block>();
+            var inactives = new List<Block>();
             for (var i = 0; i < _input.Voxels.Length; i++)
             {
                 var v = voxels[i];
@@ -59,8 +59,7 @@ namespace MagicaVoxLoader
                 if (v.X >= grid.Length || v.Y >= grid[0].Length || v.Z >= grid[0][0].Length || v.IsEmpty)
                     continue;
 
-                // We reduce color index by one so the index matches with our palette array
-                var data = new BlockData(voxels[i].X, voxels[i].Y, voxels[i].Z, (byte) (voxels[i].ColorIndex - 1));
+                var data = new Block(voxels[i].X, voxels[i].Y, voxels[i].Z, voxels[i].ColorIndex);
 
                 if (IsActive(data.X, data.Y, data.Z, grid))
                     actives.Add(data);

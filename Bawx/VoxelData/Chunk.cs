@@ -7,9 +7,13 @@ namespace Bawx.VoxelData
 {
     public sealed class Chunk
     {
-        public const int DefaultSize = 32;
+        public const int MaxSize = 255;
+        public const int DefaultSize = 16;
 
         public ChunkRenderer Renderer { get; }
+        // TODO remove in favor of BlockContainer below
+        public Block[] TmpBlocks;
+        public BlockContainer Blocks { get; }
 
         private Vector3 _position;
         public Vector3 Position
@@ -32,7 +36,6 @@ namespace Bawx.VoxelData
 
         public Vector3 Center => Position + new Vector3(SizeX/2, SizeY/2, SizeZ/2);
 
-        public BlockData[] BlockData;
 
         public Chunk(ChunkRenderer renderer, Vector3 position, 
             int sizeX = DefaultSize, int sizeY = DefaultSize, int sizeZ = DefaultSize)
@@ -45,7 +48,7 @@ namespace Bawx.VoxelData
             TotalSize = sizeX*sizeY*sizeZ;
         }
 
-        public void SetBlockData(int index, BlockData data)
+        public void SetBlockData(int index, Block data)
         {
             if (!Renderer.Initialized)
                 throw new InvalidOperationException("Renderer must be initialized with <see cref='BuildChunk' /> first.");
@@ -59,7 +62,7 @@ namespace Bawx.VoxelData
         /// <param name="data"></param>
         /// <param name="rebuildIfNeeded"></param>
         /// <returns></returns>
-        public void AddBlock(BlockData data, bool rebuildIfNeeded = false)
+        public void AddBlock(Block data, bool rebuildIfNeeded = false)
         {
             if (BlockCount >= TotalSize)
                 throw new InvalidOperationException("Chunk is full.");
@@ -68,7 +71,7 @@ namespace Bawx.VoxelData
             // TODO store the blocks in a more manageable format
         }
 
-        public void BuildChunk(BlockData[] data, int? activeCount = null, bool rebuild = false)
+        public void BuildChunk(Block[] data, int? activeCount = null, bool rebuild = false)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
@@ -79,7 +82,7 @@ namespace Bawx.VoxelData
             if (activeCount < 0 || activeCount > data.Length)
                 throw new ArgumentOutOfRangeException(nameof(activeCount));
 
-            BlockData = data;
+            TmpBlocks = data;
             Renderer.Initialize(this, activeCount ?? data.Length);
             BlockCount = data.Length;
             // TODO store the blocks in a more manageable format (octree probably) for physics!

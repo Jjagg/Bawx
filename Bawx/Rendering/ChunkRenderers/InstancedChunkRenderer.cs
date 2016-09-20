@@ -8,7 +8,7 @@ namespace Bawx.Rendering.ChunkRenderers
 {
     public class InstancedChunkRenderer : ChunkRenderer
     {
-        private readonly BlockData[] _tmpBlockData;
+        private readonly Block[] _tmpBlock;
         private readonly VertexBufferBinding[] _bufferBindings;
         // the instance vertex buffer
         private VertexBuffer _vertexBuffer;
@@ -18,26 +18,26 @@ namespace Bawx.Rendering.ChunkRenderers
 
         public InstancedChunkRenderer(GraphicsDevice graphicsDevice, Vector4[] palette) : base(graphicsDevice, palette)
         {
-            _tmpBlockData = new BlockData[1];
+            _tmpBlock = new Block[1];
             _bufferBindings = new VertexBufferBinding[2];
             _bufferBindings[0] = new VertexBufferBinding(CubeBuilder.GetNormalBuffer(graphicsDevice), 0, 0);
         }
 
         protected override void InitializeInternal(Chunk chunk, int active, int maxBlocks)
         {
-            _vertexBuffer = new VertexBuffer(GraphicsDevice, BlockData.VertexDeclaration, maxBlocks, BufferUsage.WriteOnly);
-            _vertexBuffer.SetData(chunk.BlockData);
+            _vertexBuffer = new VertexBuffer(GraphicsDevice, Block.VertexDeclaration, maxBlocks, BufferUsage.WriteOnly);
+            _vertexBuffer.SetData(chunk.TmpBlocks);
             _bufferBindings[1] = new VertexBufferBinding(_vertexBuffer, 0, 1);
 
             ActiveCount = active;
         }
 
-        public override void SetBlock(BlockData block, int index)
+        public override void SetBlock(Block block, int index)
         {
             // TODO take active blocks into account
             if (index >= BlockCount) ActiveCount = index + 1;
-            _tmpBlockData[0] = block;
-            _vertexBuffer.SetData(BlockDataSize * index, _tmpBlockData, 0, 1, BlockDataSize);
+            _tmpBlock[0] = block;
+            _vertexBuffer.SetData(BlockDataSize * index, _tmpBlock, 0, 1, BlockDataSize);
         }
 
         public override void RemoveBlock(int index)

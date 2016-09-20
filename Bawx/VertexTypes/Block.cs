@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Bawx.VertexTypes
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct BlockData : IVertexType
+    public struct Block : IVertexType
     {
         public byte X;
         public byte Y;
@@ -13,8 +13,9 @@ namespace Bawx.VertexTypes
         public byte Index;
 
         public static readonly VertexDeclaration VertexDeclaration;
+        public bool IsEmpty => Index == 0;
 
-        public BlockData(byte x, byte y, byte z, byte index)
+        public Block(byte x, byte y, byte z, byte index)
         {
             X = x;
             Y = y;
@@ -22,7 +23,7 @@ namespace Bawx.VertexTypes
             Index = index;
         }
 
-        public BlockData(byte[] bytes)
+        public Block(byte[] bytes)
         {
             X = bytes[0];
             Y = bytes[1];
@@ -30,7 +31,7 @@ namespace Bawx.VertexTypes
             Index = bytes[3];
         }
 
-        public BlockData(uint packedValue) : this(
+        public Block(uint packedValue) : this(
                 (byte) (packedValue & 0xFF),
                 (byte) ((packedValue >> 8) & 0xFF),
                 (byte) ((packedValue >> 16) & 0xFF),
@@ -56,7 +57,7 @@ namespace Bawx.VertexTypes
             return $"Position: ({X}, {Y}, {Z}), Index: {Index}";
         }
 
-        public bool Equals(BlockData other)
+        public bool Equals(Block other)
         {
             return X == other.X && Y == other.Y && Z == other.Z && Index == other.Index;
         }
@@ -64,7 +65,7 @@ namespace Bawx.VertexTypes
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is BlockData && Equals((BlockData) obj);
+            return obj is Block && Equals((Block) obj);
         }
 
         public override int GetHashCode()
@@ -79,17 +80,17 @@ namespace Bawx.VertexTypes
             }
         }
 
-        public static bool operator ==(BlockData a, BlockData b)
+        public static bool operator ==(Block a, Block b)
         {
             return a.Equals(b);
         }
 
-        public static bool operator !=(BlockData a, BlockData b)
+        public static bool operator !=(Block a, Block b)
         {
             return !(a == b);
         }
 
-        static BlockData()
+        static Block()
         {
             var elements = new [] 
             { 

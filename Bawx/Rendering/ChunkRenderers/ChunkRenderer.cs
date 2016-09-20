@@ -15,7 +15,7 @@ namespace Bawx.Rendering.ChunkRenderers
         protected readonly GraphicsDevice GraphicsDevice;
         protected Chunk Chunk;
 
-        protected static int BlockDataSize = Marshal.SizeOf(typeof(BlockData));
+        protected static int BlockDataSize = Marshal.SizeOf(typeof(Block));
 
         /// <summary>
         /// The number of active blocks.
@@ -77,7 +77,7 @@ namespace Bawx.Rendering.ChunkRenderers
             if (Initialized)
                 Dispose();
 
-            InitializeInternal(chunk, active, maxBlocks ?? chunk.BlockData.Length);
+            InitializeInternal(chunk, active, maxBlocks ?? chunk.TmpBlocks.Length);
             _currentIndex += chunk.BlockCount;
             Initialized = true;
         }
@@ -93,7 +93,7 @@ namespace Bawx.Rendering.ChunkRenderers
         /// </summary>
         /// <param name="block"></param>
         /// <param name="index"></param>
-        public abstract void SetBlock(BlockData block, int index);
+        public abstract void SetBlock(Block block, int index);
 
         /// <summary>
         /// Add a block with the given data and returns the index of the created block.
@@ -105,7 +105,7 @@ namespace Bawx.Rendering.ChunkRenderers
         ///   Fulness can be checked with <see cref="BufferFull"/> and <see cref="FreeBlocks"/>.
         /// </param>
         /// <returns>The index of the added block.</returns>
-        public int AddBlock(BlockData block, bool rebuildIfNeeded = false)
+        public int AddBlock(Block block, bool rebuildIfNeeded = false)
         {
             // TODO overwrite inactive blocks if any exist.
             if (FreeBlocks == 0)

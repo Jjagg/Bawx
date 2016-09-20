@@ -2,7 +2,7 @@ This software is licensed under the MIT License
 
 **Copyright (c) 2016 Jesse Gielen**
 
-Some code taken from or inspired by [kyoob](https://github.com/TheCodeInside/kyoob) also licensed under the MIT License:
+Some code inspired by [kyoob](https://github.com/TheCodeInside/kyoob) also licensed under the MIT License:
 
 **Copyright (c) 2014-2015 Richard Selneck**
 
