@@ -20,11 +20,9 @@ namespace Bawx.Rendering.ChunkRenderers
         {
         }
 
-        protected override void InitializeInternal(Chunk chunk, int active, int maxBlocks)
+        protected override void InitializeInternal(Chunk chunk, Block[] blocks, int active, int maxBlocks)
         {
-            var grid = BuildGrid(chunk);
-
-            GreedyMesh.Generate(grid, CreateQuad, out _vertices, out _indices);
+            GreedyMesh.Generate(chunk.Blocks, CreateQuad, out _vertices, out _indices);
         }
 
         private IEnumerable<QuadData> CreateQuad(int[] p, int[] du, int[] dv, int normal, bool normalPos, GreedyMesh.VoxelFace voxelFace, bool backFace)
@@ -45,25 +43,6 @@ namespace Bawx.Rendering.ChunkRenderers
         private byte DirectionToFace(int direction, bool positive)
         {
             return (byte) (direction*2 + (positive ? 0 : 1));
-        }
-
-        private static byte[][][] BuildGrid(Chunk chunk)
-        {
-            var grid = new byte[chunk.SizeX][][];
-            for (var x = 0; x < chunk.SizeX; x++)
-            {
-                grid[x] = new byte[chunk.SizeY][];
-
-                for (var y = 0; y < chunk.SizeY; y++)
-                {
-                    grid[x][y] = new byte[chunk.SizeZ];
-                }
-            }
-
-            foreach (var block in chunk.TmpBlocks)
-                grid[block.X][block.Y][block.Z] = block.Index;
-
-            return grid;
         }
 
         #endregion

@@ -23,10 +23,10 @@ namespace Bawx.Rendering.ChunkRenderers
             _bufferBindings[0] = new VertexBufferBinding(CubeBuilder.GetNormalBuffer(graphicsDevice), 0, 0);
         }
 
-        protected override void InitializeInternal(Chunk chunk, int active, int maxBlocks)
+        protected override void InitializeInternal(Chunk chunk, Block[] blocks, int active, int maxBlocks)
         {
             _vertexBuffer = new VertexBuffer(GraphicsDevice, Block.VertexDeclaration, maxBlocks, BufferUsage.WriteOnly);
-            _vertexBuffer.SetData(chunk.TmpBlocks);
+            _vertexBuffer.SetData(blocks);
             _bufferBindings[1] = new VertexBufferBinding(_vertexBuffer, 0, 1);
 
             ActiveCount = active;

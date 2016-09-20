@@ -12,7 +12,6 @@ namespace Bawx.VoxelData
 
         public ChunkRenderer Renderer { get; }
         // TODO remove in favor of BlockContainer below
-        public Block[] TmpBlocks;
         public BlockContainer Blocks { get; }
 
         private Vector3 _position;
@@ -26,9 +25,9 @@ namespace Bawx.VoxelData
             }
         }
 
-        public readonly int SizeX;
-        public readonly int SizeY;
-        public readonly int SizeZ;
+        public readonly byte SizeX;
+        public readonly byte SizeY;
+        public readonly byte SizeZ;
 
         public readonly int TotalSize;
 
@@ -38,7 +37,7 @@ namespace Bawx.VoxelData
 
 
         public Chunk(ChunkRenderer renderer, Vector3 position, 
-            int sizeX = DefaultSize, int sizeY = DefaultSize, int sizeZ = DefaultSize)
+            byte sizeX = DefaultSize, byte sizeY = DefaultSize, byte sizeZ = DefaultSize)
         {
             Renderer = renderer;
             Position = position;
@@ -46,6 +45,8 @@ namespace Bawx.VoxelData
             SizeY = sizeY;
             SizeZ = sizeZ;
             TotalSize = sizeX*sizeY*sizeZ;
+
+            Blocks = new BlockGrid(this);
         }
 
         public void SetBlockData(int index, Block data)
@@ -82,9 +83,10 @@ namespace Bawx.VoxelData
             if (activeCount < 0 || activeCount > data.Length)
                 throw new ArgumentOutOfRangeException(nameof(activeCount));
 
-            TmpBlocks = data;
-            Renderer.Initialize(this, activeCount ?? data.Length);
+            Blocks.AddRange(data);
             BlockCount = data.Length;
+
+            Renderer.Initialize(this, data, activeCount ?? data.Length);
             // TODO store the blocks in a more manageable format (octree probably) for physics!
         }
 

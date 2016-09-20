@@ -38,7 +38,7 @@ namespace Bawx.TypeReaders
                 palette[i] = reader.ReadColor().ToVector4();
 
             var renderer = new PolygonChunkRenderer(gd, palette);
-            var chunk = new Chunk(renderer, pos, sizeX, sizeY, sizeZ);
+            var chunk = new Chunk(renderer, pos, (byte) sizeX, (byte) sizeY, (byte) sizeZ);
 
             chunk.BuildChunk(blockData, activeCount);
             return chunk;

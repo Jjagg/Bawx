@@ -1,12 +1,23 @@
-﻿using System.Collections.Generic;
-using Bawx.VertexTypes;
+﻿using Bawx.VertexTypes;
 using Microsoft.Xna.Framework;
 
 namespace Bawx.VoxelData
 {
     public abstract class BlockContainer
     {
+        protected readonly Chunk Chunk;
+        public int Count => Chunk.BlockCount;
+
+        public int SizeX => Chunk.SizeX;
+        public int SizeY => Chunk.SizeY;
+        public int SizeZ => Chunk.SizeZ;
+
         public abstract BoundingBox Bounds { get; }
+
+        protected BlockContainer(Chunk chunk)
+        {
+            Chunk = chunk;
+        }
 
         /// <summary>
         /// Get the block at {x, y, z} or <see cref="BlockData.Empty"/> if no block is present.
@@ -29,7 +40,11 @@ namespace Bawx.VoxelData
         /// Adds a collection of blocks.
         /// </summary>
         /// <param name="blocks">The blocks to add.</param>
-        public abstract void AddRange(List<Block> blocks);
+        public virtual void AddRange(Block[] blocks)
+        {
+            foreach (var b in blocks)
+                Add(b.X, b.Y, b.Z, new BlockData(b.Index));
+        }
 
         /// <summary>
         /// Add a block.

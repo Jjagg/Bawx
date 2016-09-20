@@ -25,18 +25,17 @@ namespace Bawx.Rendering.ChunkRenderers
         {
         }
 
-        protected override void InitializeInternal(Chunk chunk, int active, int maxBlocks)
+        protected override void InitializeInternal(Chunk chunk, Block[] blocks, int active, int maxBlocks)
         {
-            var blockData = chunk.TmpBlocks;
-            _vertexCount = blockData.Length*24;
-            _indexCount = blockData.Length*36;
+            _vertexCount = chunk.BlockCount*24;
+            _indexCount = chunk.BlockCount*36;
             _vertices = new VertexPositionNormalColor[maxBlocks*24];
             _indices = new int[maxBlocks * 36];
 
 
-            for (var i = 0; i < blockData.Length; i++)
+            for (var i = 0; i < blocks.Length; i++)
             {
-                var d = blockData[i];
+                var d = blocks[i];
                 // lots of garbage here maybe modfiy CubeBuilder to insert values into the array
                 var v = CubeBuilder.GetNormalColor(d.Position, new Color(Effect.Palette[d.Index]));
                 var inds = CubeBuilder.GetIndices(i * 24);

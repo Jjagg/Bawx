@@ -59,15 +59,16 @@ namespace Bawx.Rendering.ChunkRenderers
         public bool Initialized { get; private set; }
 
         /// <summary>
-        /// Initialize this renderer for the given chunk with the given block data.
+        /// Initialize this renderer for the given chunk.
         /// </summary>
         /// <param name="chunk">The chunk that this renderer should render.</param>
+        /// <param name="blocks">Array of all blocks that should be rendered.</param>
         /// <param name="active">The number of active blocks. Active blocks must precede inactive blocks in blockData.</param>
         /// <param name="maxBlocks">
         /// The total number of blocks to make room for. Some renderers need to resize a buffer when they get full,
         /// so this parameter can be used to reserve some extra room from the start.
         /// </param>
-        public void Initialize(Chunk chunk, int active, int? maxBlocks = null)
+        public void Initialize(Chunk chunk, Block[] blocks, int active, int? maxBlocks = null)
         {
             if (chunk == null)
                 throw new ArgumentNullException(nameof(chunk));
@@ -77,12 +78,12 @@ namespace Bawx.Rendering.ChunkRenderers
             if (Initialized)
                 Dispose();
 
-            InitializeInternal(chunk, active, maxBlocks ?? chunk.TmpBlocks.Length);
+            InitializeInternal(chunk, blocks, active, maxBlocks ?? chunk.BlockCount);
             _currentIndex += chunk.BlockCount;
             Initialized = true;
         }
 
-        protected abstract void InitializeInternal(Chunk chunk, int active, int maxBlocks);
+        protected abstract void InitializeInternal(Chunk chunk, Block[] blocks, int active, int maxBlocks);
 
         #endregion Initialization
 
