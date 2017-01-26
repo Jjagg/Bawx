@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Bawx;
-using Bawx.Rendering;
 using Bawx.Rendering.ChunkRenderers;
 using Bawx.Rendering.Effects;
 using Bawx.Rendering.Lighting;
 using Bawx.Util;
 using Bawx.VoxelData;
-using BlockWorld;
-using InputHelper;
-using MGWheels.MiniUtils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -30,7 +25,7 @@ namespace VoxViewer
 
         public VoxViewerState State;
 
-        private Axes _axes;
+        //private Axes _axes;
 
         private Chunk CurrentChunk => State.CurrentChunk;
         private VoxelEffect Effect => CurrentChunk.Renderer.Effect;
@@ -42,7 +37,6 @@ namespace VoxViewer
             _graphics = new GraphicsDeviceManager(this);
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.HardwareModeSwitch = false;
-            _graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
 
             IsFixedTimeStep = false;
@@ -54,6 +48,7 @@ namespace VoxViewer
         {
             Components.Add(new FrameRateCounter(this));
             Components.Add(new Input(this));
+
             base.Initialize();
         }
 
@@ -106,10 +101,10 @@ namespace VoxViewer
             }
 
             _shadowMap = new DirectionalShadowMap(GraphicsDevice);
-            _axes = new Axes(GraphicsDevice)
+            /*_axes = new Axes(GraphicsDevice)
             {
                 ScreenPos = new Vector2(1800, 100),
-            };
+            };*/
 
             State = new VoxViewerState(this, modelNames, modelChunks);
         }
@@ -120,7 +115,7 @@ namespace VoxViewer
 
             State.Update(gameTime);
 
-            _axes.Update(State.ViewMatrix);
+            //_axes.Update(State.ViewMatrix);
 
             Effect.View = State.ViewMatrix;
             Effect.Projection = State.ProjectionMatrix;
@@ -265,9 +260,6 @@ namespace VoxViewer
 
             _deviceState.Pop();
 
-            _deviceState.Push();
-            _axes.Draw();
-            _deviceState.Pop();
         }
 
         private void RenderString(string str, Vector2 position)
@@ -404,7 +396,7 @@ namespace VoxViewer
             Static = 0,
             Rotating = 1,
             Front = 2,
-            Back = 3,
+            Back = 3
         }
     }
 }

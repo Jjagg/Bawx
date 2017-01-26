@@ -4,7 +4,7 @@
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
 /platform:Windows
-/config:
+/config:Test=Yes
 /profile:Reach
 /compress:False
 
@@ -107,6 +107,7 @@
 #begin font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:font.spritefont
 

@@ -10,3 +10,4 @@ packages/
 
 #VS
 *.csproj.user
+.vs

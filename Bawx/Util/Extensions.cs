@@ -149,9 +149,10 @@ namespace Bawx.Util
         /// </summary>
         /// <param name="box">The box.</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetWidth(this BoundingBox box)
         {
-            return Math.Abs(box.Max.X - box.Min.X);
+            return box.Max.X - box.Min.X;
         }
 
         /// <summary>
@@ -159,9 +160,10 @@ namespace Bawx.Util
         /// </summary>
         /// <param name="box">The box.</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetHeight(this BoundingBox box)
         {
-            return Math.Abs(box.Max.Y - box.Min.Y);
+            return box.Max.Y - box.Min.Y;
         }
 
         /// <summary>
@@ -169,9 +171,10 @@ namespace Bawx.Util
         /// </summary>
         /// <param name="box">The box.</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetDepth(this BoundingBox box)
         {
-            return Math.Abs(box.Max.Z - box.Min.Z);
+            return box.Max.Z - box.Min.Z;
         }
 
         /// <summary>
@@ -197,6 +200,55 @@ namespace Bawx.Util
             var vec = new Vector3();
             box.GetDimensions(ref vec);
             return vec;
+        }
+
+        public static bool SlabIntersect(this BoundingBox b, Ray ray, out float mint, out float maxt)
+        {
+            mint = 0f;
+            maxt = float.PositiveInfinity;
+
+            float tmp;
+
+            var invX = 1f / ray.Direction.X;
+            var tNear = (b.Min.X - ray.Position.X)*invX;
+            var tFar = (b.Max.X - ray.Position.X)*invX;
+
+            if (tNear > tFar) { tmp = tNear; tNear = tFar; tFar = tmp; }
+            if (tNear > mint) mint = tNear;
+            if (tFar < maxt) maxt = tFar;
+
+            if (mint > maxt) return false;
+
+
+            var invY = 1f / ray.Direction.Y;
+            tNear = (b.Min.Y - ray.Position.Y)*invY;
+            tFar = (b.Max.Y - ray.Position.Y)*invY;
+
+            if (tNear > tFar) { tmp = tNear; tNear = tFar; tFar = tmp; }
+            if (tNear > mint) mint = tNear;
+            if (tFar < maxt) maxt = tFar;
+
+            if (mint > maxt) return false;
+
+
+            var invZ = 1f / ray.Direction.Z;
+            tNear = (b.Min.Z - ray.Position.Z)*invZ;
+            tFar = (b.Max.Z - ray.Position.Z)*invZ;
+
+            if (tNear > tFar) { tmp = tNear; tNear = tFar; tFar = tmp; }
+            if (tNear > mint) mint = tNear;
+            if (tFar < maxt) maxt = tFar;
+
+            return mint <= maxt;
+        }
+
+        #endregion
+
+        #region Ray
+
+        public static Vector3 ValueAt(this Ray ray, float t)
+        {
+            return ray.Position + ray.Direction*t;
         }
 
         #endregion

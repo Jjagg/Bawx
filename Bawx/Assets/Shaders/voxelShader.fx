@@ -93,7 +93,7 @@ VertexShaderOutput DebugVS(CubeData unitCube, BlockData blockData)
     float4 viewPosition = mul(worldPosition, View);
 
     output.Position = mul(viewPosition, Projection);
-    output.Color = Palette[blockData.OffsetIndex.z];
+    output.Color = Palette[int(blockData.OffsetIndex.z) - 1];
 
     return output;
 }
@@ -130,7 +130,7 @@ VertexShaderOutput InstancingVS(CubeData unitCube, BlockData block)
     float diffuseAmount = max(-dot(unitCube.Normal, LightDirection), 0);
     float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
     
-    output.Color = float4(lightingResult, 1) * Palette[block.OffsetIndex.w];
+    output.Color = float4(lightingResult, 1) * Palette[int(block.OffsetIndex.w) - 1];
 
     return output;
 }
@@ -154,7 +154,7 @@ VertexShaderOutput MeshVS(QuadData quad)
     float diffuseAmount = max(-dot(normal, LightDirection), 0);
     float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
 
-    output.Color = float4(lightingResult, 1) * Palette[quad.OffsetIndex.w];
+    output.Color = float4(lightingResult, 1) * Palette[int(quad.OffsetIndex.w) - 1];
 
     return output;
 }
@@ -168,7 +168,7 @@ WithShadowOutput InstancingWithShadowVS(CubeData unitCube, BlockData blockData)
     output.Position = mul(viewPosition, Projection);
 
     // Color lookup
-    output.Color = Palette[blockData.OffsetIndex.w];
+    output.Color = Palette[int(blockData.OffsetIndex.w) - 1];
 
     // Compute lighting, using a simple Lambert model.
     float diffuseAmount = max(-dot(unitCube.Normal, LightDirection), 0);

@@ -35,6 +35,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Util\Rectangle3D.cs" />
+    <Compile Include="Util\TaskManager.cs" />
+    <Compile Include="Util\Transformation.cs" />
     <Compile Include="VoxelData\BlockContainer.cs" />
     <Compile Include="VoxelData\BlockData.cs" />
     <Compile Include="VoxelData\BlockGrid.cs" />
@@ -64,12 +67,6 @@
     <Compile Include="Rendering\Effects\VoxelTracerEffect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Source\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
-      <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
-      <Name>MonoGame.Framework.Windows</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Assets\Shaders\voxelShader.dx11.mgfxo" />
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +76,12 @@
     <EmbeddedResource Include="Assets\Shaders\voxelTracer.dx11.mgfxo" />
     <EmbeddedResource Include="Assets\Shaders\voxelTracer.ogl.mgfxo" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
+      <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
+      <Name>MonoGame.Framework.Windows</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

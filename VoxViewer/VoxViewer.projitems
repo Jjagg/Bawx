@@ -9,6 +9,8 @@
     <Import_RootNamespace>VoxViewer</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)FrameRateCounter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VoxViewer.cs" />
   </ItemGroup>
   <ItemGroup>
