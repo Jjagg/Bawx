@@ -78,15 +78,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="InputHelper">
-      <HintPath>..\..\MGWheels\MGWheels.InputHelper\bin\Release\InputHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="MGWheels.MiniUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1425, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MGWheels\MGWheels.MiniUtils\bin\Release\MGWheels.MiniUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="MGWheels.Primitives3D">
-      <HintPath>..\..\MGWheels\MGWheels.Primitives3D\bin\Release\MGWheels.Primitives3D.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -95,10 +89,6 @@
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Source\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
-      <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
-      <Name>MonoGame.Framework.Windows</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Bawx\Bawx.csproj">
       <Project>{9d7dab47-ca9f-4481-a488-22efc2d4bc28}</Project>
       <Name>Bawx</Name>

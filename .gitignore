@@ -9,4 +9,5 @@ packages/
 *.swo
 
 #VS
-*.csproj.user
+*.user
+.vs

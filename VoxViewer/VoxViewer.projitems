@@ -9,7 +9,9 @@
     <Import_RootNamespace>VoxViewer</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VoxViewer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VoxViewerState.cs" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />

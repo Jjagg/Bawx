@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1425, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -48,10 +52,7 @@
     <Compile Include="VoxelData\IBounded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexTypes\QuadData.cs" />
-    <Compile Include="Rendering\ChunkRenderers\BatchChunkRenderer.cs" />
     <Compile Include="Rendering\ChunkRenderers\ChunkRenderer.cs" />
-    <Compile Include="Rendering\ChunkRenderers\ChunkRendererType.cs" />
-    <Compile Include="Rendering\ChunkRenderers\InstancedChunkRenderer.cs" />
     <Compile Include="Rendering\ChunkRenderers\PolygonChunkRenderer.cs" />
     <Compile Include="Rendering\Lighting\DirectionalShadowMap.cs" />
     <Compile Include="Util\CubeBuilder.cs" />
@@ -62,12 +63,6 @@
     <Compile Include="TypeReaders\ChunkReader.cs" />
     <Compile Include="Rendering\Effects\VoxelEffect.cs" />
     <Compile Include="Rendering\Effects\VoxelTracerEffect.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Source\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
-      <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
-      <Name>MonoGame.Framework.Windows</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Shaders\voxelShader.dx11.mgfxo" />

@@ -19,7 +19,6 @@ namespace MagicaVoxLoader
             output.Write(value.Position);
             output.Write(value.BlockCount);
             output.Write(value.ActiveBlocks);
-            output.WriteRawObject(value.RendererType);
 
             for (var i = 0; i < value.BlockCount; i++)
             {
